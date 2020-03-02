@@ -1,21 +1,24 @@
 import React from 'react'
-import {Component} from 'react';
-import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
+import { Component } from 'react';
+import { connect } from "react-redux";
+import { signIn, signOut } from "../actions";
+import { Redirect } from "react-router-dom";
 
-class Login extends Component {
+class SignIn extends Component {
     constructor(props) {
         super(props);
     
         this.state = {
           email: '',
           password: '',
-          error: '',
+          error: this.props.loginError,
         };
     
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.loginAsRenter = this.loginAsRenter.bind(this);
+        this.loginAsBuyer = this.loginAsBuyer.bind(this);
         this.loginAsSeller = this.loginAsSeller.bind(this);
+        this.redirectToProfile = this.redirectToProfile.bind(this);
       }
 
       handleChange(event) {
@@ -28,23 +31,37 @@ class Login extends Component {
         });
       }
     
-      loginAsRenter() {
+      loginAsBuyer() {
         this.setState({
-          email: 'renter@kavholm.com',
+          email: 'buyer@.com',
           password: 'test',
         });
       }
     
       loginAsSeller() {
         this.setState({
-          email: 'owner@kavholm.com',
+          email: 'seller@.com',
           password: 'test',
         });
       }
     
       async handleSubmit(event) {
+        event.preventDefault();
+        try {
+          this.props.signIn(this.state.email, this.state.password);
+        } catch (err) {
+          console.log('Signin failed.', err);
+        }
 
       }
+
+    redirectToProfile = () => {
+      if (this.props.isSignedIn) {
+        return <Redirect to="/profile" />;
+      }
+    }
+
+
 
     render() {
         return (
@@ -61,16 +78,16 @@ class Login extends Component {
             <form onSubmit={this.handleSubmit}>
               <button
                 className="btn btn-secondary btn-half"
-                onClick={this.loginAsRenter}
+                onClick={this.loginAsBuyer}
               >
-                Renter demo
+                Buyer demo
               </button>
   
               <button
                 className="btn btn-secondary btn-half right"
                 onClick={this.loginAsSeller}
               >
-                Owner demo
+                Seller demo
               </button>
               <input
                 className="icon-input new-section form__input"
@@ -99,10 +116,22 @@ class Login extends Component {
                 {this.state.error && `Error: ${this.state.error}`}
               </p>
             </form>
+            {this.redirectToProfile()}
           </div>
   
          )
     }
 }
 
-export default Login
+const mapStateToProps = state => {
+  return {
+    currentUserObj: state.auth.userObj,
+    isSignedIn: state.auth.isSignedIn,
+    loginError: state.auth.loginError 
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  { signIn, signOut }
+)(SignIn);

@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
-import Header from "../components/Header"
-import SignUp from "../components/SignUp"
+import apiClient  from "../api/apiClient"
+import cookie from 'js-cookie';
+import { Redirect } from "react-router-dom";
+import { connect } from "react-redux";
+import { signIn, signOut } from "../actions";
 
-class SignupForm extends Component {
+class SignUp extends Component {
     constructor(props) {
       super(props);
   
@@ -16,6 +19,8 @@ class SignupForm extends Component {
   
       this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
+
+      this.redirectToProfile = this.redirectToProfile.bind(this);
     }
   
     handleChange(event) {
@@ -30,7 +35,21 @@ class SignupForm extends Component {
   
     async handleSubmit(event) {
       event.preventDefault();
+      try {
+        let res = await apiClient.register(this.state);
+        console.log(res);
+        
+        this.props.signIn(this.state.email, this.state.password);
+      } catch (err) {
+        console.log('Signup failed.', err);
+      }
     }
+
+    redirectToProfile = () => {
+      if (this.props.isSignedIn) {
+        return <Redirect to="/profile" />;
+      }
+    };
   
     render() {
       return (
@@ -93,9 +112,21 @@ class SignupForm extends Component {
                 {this.state.error && `Error: ${this.state.error}`}
               </p>
             </form>
+            {this.redirectToProfile()}
           </div>
         );
     }
 }
 
-export default SignupForm;
+const mapStateToProps = state => {
+  return {
+    currentUserObj: state.auth.userObj,
+    isSignedIn: state.auth.isSignedIn,
+    loginError: state.auth.loginError 
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  { signIn, signOut }
+)(SignUp);
