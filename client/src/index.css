@@ -11,8 +11,7 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: Roboto, Open Sans, Segoe UI, sans-serif;
 }
 
 html {
@@ -323,7 +322,8 @@ a:hover {
 
   .supporting-text {
     font-size: 16px;
-    margin-bottom: 24px;
+    margin-bottom: 12px;
+    margin-top: 12px
   }
   button:not(:disabled) {
     cursor: pointer;
@@ -336,6 +336,13 @@ a:hover {
     padding: 8px;
     display: inline-block;
     width: 100%;
+    border: 2px solid #0055ff;
+    color: #0055ff;
+  }
+  .btn-full:hover {
+    background: #0055ff;
+    border: 2px solid #0055ff;
+    color: #fff;
   }
 
   .btn-secondary {
@@ -350,11 +357,17 @@ a:hover {
   }
 
   .btn-half {
-    display: inline;
     width: 40%;
     margin-right: 16px;
     margin-left: 16px;
+    margin-top: 16px;
     box-sizing: border-box;
+    text-align:center;
+  }
+  .btn-half:hover {
+    background: #0055ff;
+    border: 2px solid #0055ff;
+    color: #fff;
   }
 
 
@@ -524,6 +537,190 @@ a:hover {
 }
 
 .user-options {
-  height: 1vh !important;
+  margin-right: 30px;
+  margin-top: 10px;
+  font-size: 2.0rem;
+  font-weight: 700;
+  color: black;
+  float: right;
   position: absolute;
+  z-index: 2;
+}
+
+.user-options-dd {
+  font-size: 1.5rem !important;
+}
+
+
+.btn-card-payment {
+  border: none;
+  background-color: blueviolet;
+  border-radius: 10px;
+  padding: 10px 10px;
+  text-align: center;
+  text-decoration: white;
+  font-size: 16px;
+  float: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  width: 100%
+}
+
+.submit-card-button {
+  display: flex;
+  justify-content: center;
+}
+
+
+
+.fill-card {
+  font-weight: 600;
+  height: 40px;
+  border-radius: 8px !important;
+  padding: 8px;
+  width: 30%;
+  border: 2px solid gray;
+  color: gray;
+  justify-content: center;
+  text-align: center;
+}
+
+.fill-card:hover {
+  background: gray;
+  border: 2px solid gray;
+  color: #fff;
+}
+
+.sr-legal-text {
+  color: var(--gray-light);
+  text-align: center;
+  font-size: 13px;
+  line-height: 17px;
+  margin-top: 12px;
+}
+
+/* Form */
+.sr-form-row {
+  margin: 16px 0;
+}
+
+/* Checkbox */
+.sr-checkbox-label {
+  position: relative;
+  cursor: pointer;
+}
+
+.sr-checkbox-label input {
+  opacity: 10;
+  margin-right: 6px;
+}
+
+.sr-checkbox-label .sr-checkbox-check {
+  position: absolute;
+  left: 0;
+  height: 16px;
+  width: 16px;
+  background-color: white;
+  border: 1px solid var(--gray-border);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.sr-checkbox-label input:focus ~ .sr-checkbox-check {
+  box-shadow: 0 0 0 1px rgba(50, 151, 211, 0.3), 0 1px 1px 0 rgba(0, 0, 0, 0.07),
+    0 0 0 4px rgba(50, 151, 211, 0.3);
+  outline: none;
+}
+
+.sr-checkbox-label input:checked ~ .sr-checkbox-check {
+  background-color: var(--accent-color);
+  background-image: url("https://storage.googleapis.com/stripe-sample-images/icon-checkmark.svg");
+  background-repeat: no-repeat;
+  background-size: 16px;
+}
+
+/* Animated form */
+
+.sr-root {
+  animation: 0.4s form-in;
+  animation-fill-mode: both;
+  animation-timing-function: ease;
+}
+
+.sr-payment-form .sr-form-row {
+  animation: 0.4s field-in;
+  animation-fill-mode: both;
+  animation-timing-function: ease;
+  transform-origin: 50% 0%;
+}
+
+/* need saas for loop :D  */
+.sr-payment-form .sr-form-row:nth-child(1) {
+  animation-delay: 0;
+}
+.sr-payment-form .sr-form-row:nth-child(2) {
+  animation-delay: 60ms;
+}
+.sr-payment-form .sr-form-row:nth-child(3) {
+  animation-delay: 120ms;
+}
+.sr-payment-form .sr-form-row:nth-child(4) {
+  animation-delay: 180ms;
+}
+.sr-payment-form .sr-form-row:nth-child(5) {
+  animation-delay: 240ms;
+}
+.sr-payment-form .sr-form-row:nth-child(6) {
+  animation-delay: 300ms;
+}
+.hidden {
+  display: none;
+}
+
+@keyframes field-in {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px) scale(1);
+  }
+}
+
+@keyframes form-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+.card-errors {
+  color: var(--accent-color);
+  text-align: left;
+  font-size: 13px;
+  line-height: 17px;
+  margin-top: 12px;
+}
+
+
+
+
+.sr-combo-inputs-row {
+  width: 100%;
+  margin-top: 1em;
+}
+
+
+
+.carousel-banner {
+  display: flex;
+  justify-content: center;
+  margin-top: 5rem;
+
 }

@@ -17,7 +17,7 @@ const checkAuth = function(req, res, next) {
           message: 'Please use google Auth to create manage notes'
         });
       } else {
-        req.user = user; //set the user to req so other routes can use it
+        req.body.email = user; //set the user to req so other routes can use it
         console.log("Parsed user object from token i %o", user);
         next();
       }

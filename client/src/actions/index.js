@@ -1,7 +1,8 @@
 import {
     SIGN_IN,
     SIGN_OUT,
-    SIGN_IN_FAILURE
+    SIGN_IN_FAILURE,
+    RELAY_URL
   } from './types';
   import apiClient from '../api/apiClient';
   
@@ -28,11 +29,13 @@ import {
   
   };
   
-  export const signOut = () => {
+  export const signOut = () => async (dispatch, getState) => {
     sessionStorage.removeItem('jwt');
-    return {
-      type: SIGN_OUT
-    };
+    dispatch({ type: SIGN_OUT });
+  }
+
+  export const setRelayUrl = (url) => async (dispatch, getState) => {
+    dispatch({ type: RELAY_URL, payload: url });
   
   };
   

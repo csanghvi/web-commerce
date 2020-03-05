@@ -16,7 +16,16 @@ if (process.env.NODE_ENV !== 'production') {
    require('dotenv').load();
  }
 
-app.use(bodyParser.json());
+ app.use(
+  express.json({
+    // Should use middleware or a function to compute it only when hitting the Stripe webhook endpoint.
+    verify: function(req, res, buf) {
+      if (req.originalUrl.startsWith("/api/hooks")) {
+        req.rawBody = buf.toString();
+      }
+    }
+  })
+);
 app.use(cors());
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");

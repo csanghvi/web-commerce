@@ -1,26 +1,34 @@
 import React, { Component } from "react";
 import { Dropdown } from 'semantic-ui-react'
 import { connect } from 'react-redux';
+import { signIn, signOut } from "../actions";
+import { Redirect, Link, withRouter } from "react-router-dom";
 
 //this.props.onSignOutClick
 
 
 class UserOptions extends Component {
 
+  onSignOutClick = () => {
+    this.props.signOut();
+  };
+
+  redirectToProfile = () => {
+    console.log('Redirecting')
+    this.props.history.push(`/profile`);
+  };
 
   render() {
     return (
 
-      <div className="right floated content">
         <Dropdown className='link item icon user-options' trigger={this.props.currentUserObj.email}>
-          <Dropdown.Menu>
-            <Dropdown.Item icon='user' text='Dashboard'/>
-            <Dropdown.Item icon='settings' text='Settings'/>
-            <Dropdown.Item icon='sign out' text='Sign Out' onClick={this.props.onSignOutClick}/>
+          <Dropdown.Menu className="user-options-dd">
+            <Dropdown.Item className="user-options-dd" icon='user' text='Dashboard' onClick={this.redirectToProfile}/>
+            <Dropdown.Item className="user-options-dd" icon='settings' text='Settings'/>
+            <Dropdown.Item className="user-options-dd" icon='sign out' text='Sign Out' onClick={this.onSignOutClick}/>
           </Dropdown.Menu>
         </Dropdown>
 
-      </div>
 
     );
   }
@@ -32,7 +40,9 @@ const mapStateToProps = state => {
     isSignedIn: state.auth.isSignedIn
   };
 };
-export default connect(
+
+
+export default withRouter (connect(
   mapStateToProps,
-  { }
-)(UserOptions);
+  { signIn, signOut }
+)(UserOptions));

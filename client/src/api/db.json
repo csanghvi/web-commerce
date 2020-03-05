@@ -3,18 +3,17 @@
       {
         "userId": "Igj-hMfQa",
         "firstName": "Mr",
-        "lastName": "Renter",
-        "email": "renter@kavholm.com",
+        "lastName": "Seller",
+        "email": "seller@testuser.com",
         "password": "$2b$10$fDU/gKP8pL5LeozB3WBodu/zJodwplgqqAk2xkMYavFGHCcJ0/IEi",
-        "avatar": "//images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1268&q=80"
+        "avatar": "https://images.pexels.com/photos/433452/pexels-photo-433452.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
       },
       {
         "userId": "Igj-hMfQb",
         "firstName": "Miss",
         "lastName": "Owner",
-        "email": "owner@kavholm.com",
+        "email": "owner@testuser.com",
         "password": "$2b$10$fDU/gKP8pL5LeozB3WBodu/zJodwplgqqAk2xkMYavFGHCcJ0/IEi",
-        "avatar": "//images.unsplash.com/photo-1506863530036-1efeddceb993?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2741&q=80",
         "stripe": {
           "stripeUserId": "acct_1G1Os2APkNRJ6fly"
         }
@@ -24,13 +23,13 @@
       {
         "id": "10",
         "authorId": "Igj-hMfQb",
-        "location": "France",
-        "title": "Modern home on the French Riviera",
+        "location": "San Francisco",
+        "title": "A colorful celebration",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur finibus, ligula eu eleifend consequat, sem metus dignissim purus, et sodales eros ligula non lacus. Maecenas lacinia nibh at semper efficitur. Fusce tincidunt, mi non tincidunt faucibus, neque velit hendrerit tortor, non fermentum nisi tortor at dui.",
-        "source": "https://unsplash.com/photos/AutCiGUz8D4",
-        "image": "https://images.unsplash.com/photo-1528909514045-2fa4ac7a08ba?ixlib=rb-1.2.1&auto=format&fit=crop&w=2700&q=80",
-        "image2": "https://images.unsplash.com/photo-1567599672391-17b31d92e431?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80",
-        "image3": "https://images.unsplash.com/photo-1533044309907-0fa3413da946?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80",
+        "source": "https://images.pexels.com/photos/2283996/pexels-photo-2283996.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        "image": "https://images.pexels.com/photos/2283996/pexels-photo-2283996.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        "image2": "https://images.pexels.com/photos/1157557/pexels-photo-1157557.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        "image3": "https://images.pexels.com/photos/433452/pexels-photo-433452.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
         "price": {
           "amount": 23825,
           "currency": "USD"
@@ -39,13 +38,11 @@
       {
         "id": "21",
         "authorId": "Igj-hMfQb",
-        "location": "United States",
-        "title": "Artist's workshop in Detroit, Michigan",
+        "location": "Seattle",
+        "title": "Artist's workshop",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur finibus, ligula eu eleifend consequat, sem metus dignissim purus, et sodales eros ligula non lacus. Maecenas lacinia nibh at semper efficitur. Fusce tincidunt, mi non tincidunt faucibus, neque velit hendrerit tortor, non fermentum nisi tortor at dui.",
-        "source": "https://unsplash.com/photos/6DqRIISLZMQ",
-        "image": "https://images.unsplash.com/photo-1505081598304-3bee85f930d4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2702&q=80",
-        "image2": "https://images.unsplash.com/photo-1534511902651-6ab0ce131f2a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2689&q=80",
-        "image3": "https://images.unsplash.com/photo-1524061511843-fd43443e3cb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1536&q=80",
+        "source": "https://images.pexels.com/photos/2747449/pexels-photo-2747449.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        "image": "https://images.pexels.com/photos/2747449/pexels-photo-2747449.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
         "price": {
           "amount": 10392,
           "currency": "USD"
@@ -54,13 +51,13 @@
       {
         "id": "26",
         "authorId": "Igj-hMfQb",
-        "location": "Singapore",
-        "title": "Skyline views in Singapore",
+        "location": "Los Angeles",
+        "title": "Are you ready for some music?",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur finibus, ligula eu eleifend consequat, sem metus dignissim purus, et sodales eros ligula non lacus. Maecenas lacinia nibh at semper efficitur. Fusce tincidunt, mi non tincidunt faucibus, neque velit hendrerit tortor, non fermentum nisi tortor at dui.",
-        "source": "",
-        "image": "https://images.unsplash.com/photo-1533052494972-63e07f31e2a1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3450&q=80",
-        "image2": "https://images.unsplash.com/photo-1484154218962-a197022b5858?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2253&q=80",
-        "image3": "https://images.unsplash.com/photo-1555912881-1ecd82307e0e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1934&q=80",
+        "source": "https://images.pexels.com/photos/1763075/pexels-photo-1763075.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        "image": "https://images.pexels.com/photos/1763075/pexels-photo-1763075.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        "image2": "https://images.pexels.com/photos/1763075/pexels-photo-1763075.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        "image3": "https://images.pexels.com/photos/1763075/pexels-photo-1763075.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
         "price": {
           "amount": 38297,
           "currency": "USD"
@@ -69,13 +66,11 @@
       {
         "id": "11",
         "authorId": "Igj-hMfQb",
-        "location": "Mexico",
-        "title": "Sunny studio in Mexico City",
+        "location": "New York City",
+        "title": "Sunny studio concert",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur finibus, ligula eu eleifend consequat, sem metus dignissim purus, et sodales eros ligula non lacus. Maecenas lacinia nibh at semper efficitur. Fusce tincidunt, mi non tincidunt faucibus, neque velit hendrerit tortor, non fermentum nisi tortor at dui.",
-        "source": "https://unsplash.com/photos/ear8VOL7x8k",
-        "image": "https://images.unsplash.com/photo-1537304119-36263d2db05b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1575&q=80",
-        "image2": "https://images.unsplash.com/photo-1470058869958-2a77ade41c02?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80",
-        "image3": "https://images.unsplash.com/photo-1556912998-c57cc6b63cd7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80",
+        "source": "https://images.pexels.com/photos/2263410/pexels-photo-2263410.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        "image": "https://images.pexels.com/photos/2263410/pexels-photo-2263410.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
         "price": {
           "amount": 15492,
           "currency": "USD"
@@ -84,13 +79,11 @@
       {
         "id": "6",
         "authorId": "Igj-hMfQb",
-        "location": "Denmark",
-        "title": "Light-filled loft in Copenhagen",
+        "location": "Raleigh",
+        "title": "Light-filled night sky",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur finibus, ligula eu eleifend consequat, sem metus dignissim purus, et sodales eros ligula non lacus. Maecenas lacinia nibh at semper efficitur. Fusce tincidunt, mi non tincidunt faucibus, neque velit hendrerit tortor, non fermentum nisi tortor at dui.",
-        "source": "https://unsplash.com/photos/leDo7IX1ycM",
-        "image": "https://images.unsplash.com/photo-1549488497-256795402cc0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1534&q=80",
-        "image2": "https://images.unsplash.com/photo-1529426509-7b7a0e04062f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=975&q=80",
-        "image3": "https://images.unsplash.com/photo-1495292312634-1531ba4dc949?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80",
+        "source": "https://images.pexels.com/photos/1317374/pexels-photo-1317374.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        "image": "https://images.pexels.com/photos/1317374/pexels-photo-1317374.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
         "price": {
           "amount": 17442,
           "currency": "USD"
@@ -99,13 +92,11 @@
       {
         "id": "12",
         "authorId": "Igj-hMfQb",
-        "location": "United States",
-        "title": "Oasis in Palm Springs, California",
+        "location": "Miami",
+        "title": "Let's ride to glory",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur finibus, ligula eu eleifend consequat, sem metus dignissim purus, et sodales eros ligula non lacus. Maecenas lacinia nibh at semper efficitur. Fusce tincidunt, mi non tincidunt faucibus, neque velit hendrerit tortor, non fermentum nisi tortor at dui.",
-        "source": "https://unsplash.com/photos/CIMbOMUewH8",
-        "image": "https://images.unsplash.com/photo-1540321975033-2fff3a5a3945?ixlib=rb-1.2.1&auto=format&fit=crop&w=2700&q=80",
-        "image2": "https://images.unsplash.com/photo-1574876999742-a8be3a43f151?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80",
-        "image3": "https://images.unsplash.com/photo-1562778612-e1e0cda9915c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80",
+        "source": "https://images.pexels.com/photos/1796308/pexels-photo-1796308.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        "image": "https://images.pexels.com/photos/1796308/pexels-photo-1796308.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
         "price": {
           "amount": 19523,
           "currency": "USD"
@@ -114,13 +105,11 @@
       {
         "id": "15",
         "authorId": "Igj-hMfQb",
-        "location": "Norway",
-        "title": "Light, airy home in Oslo, Norway",
+        "location": "Las Vegas",
+        "title": "Dance to our tunes",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur finibus, ligula eu eleifend consequat, sem metus dignissim purus, et sodales eros ligula non lacus. Maecenas lacinia nibh at semper efficitur. Fusce tincidunt, mi non tincidunt faucibus, neque velit hendrerit tortor, non fermentum nisi tortor at dui.",
-        "source": "https://unsplash.com/photos/5i0GnoTTjSE",
-        "image": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1946&q=80",
-        "image2": "https://images.unsplash.com/photo-1481277542470-605612bd2d61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2590&q=80",
-        "image3": "https://images.unsplash.com/photo-1562778357-58e2feebe9aa?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2707&q=80",
+        "source": "https://images.pexels.com/photos/784707/pexels-photo-784707.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        "image": "https://images.pexels.com/photos/784707/pexels-photo-784707.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
         "price": {
           "amount": 29382,
           "currency": "USD"
@@ -129,14 +118,12 @@
       {
         "id": "18",
         "authorId": "Igj-hMfQb",
-        "location": "Spain",
-        "title": "Spacious retreat in Mallorca, Spain",
+        "location": "Chicago",
+        "title": "Run for a cause",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur finibus, ligula eu eleifend consequat, sem metus dignissim purus, et sodales eros ligula non lacus. Maecenas lacinia nibh at semper efficitur. Fusce tincidunt, mi non tincidunt faucibus, neque velit hendrerit tortor, non fermentum nisi tortor at dui.",
-        "source": "https://unsplash.com/photos/4ojhpgKpS68",
-        "image": "https://images.unsplash.com/photo-1523217582562-09d0def993a6?ixlib=rb-1.2.1&auto=format&fit=crop&w=2200&q=80",
-        "image2": "https://images.unsplash.com/photo-1534595038511-9f219fe0c979?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
-        "image3": "https://images.unsplash.com/photo-1568385155229-d533acca4f96?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=80",
-        "price": {
+        "source": "https://images.pexels.com/photos/2402734/pexels-photo-2402734.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        "image": "https://images.pexels.com/photos/2402734/pexels-photo-2402734.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+         "price": {
           "amount": 36419,
           "currency": "USD"
         }
@@ -144,13 +131,11 @@
       {
         "id": "23",
         "authorId": "Igj-hMfQb",
-        "location": "Greece",
-        "title": "Luxury, waterfront views in Santorini, Greece",
+        "location": "Boulder",
+        "title": "An evening to remember",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur finibus, ligula eu eleifend consequat, sem metus dignissim purus, et sodales eros ligula non lacus. Maecenas lacinia nibh at semper efficitur. Fusce tincidunt, mi non tincidunt faucibus, neque velit hendrerit tortor, non fermentum nisi tortor at dui.",
-        "source": "https://unsplash.com/photos/aapSemzfsOk",
-        "image": "https://images.unsplash.com/photo-1469796466635-455ede028aca?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2700&q=80",
-        "image2": "https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80",
-        "image3": "https://images.unsplash.com/photo-1508957999498-e7a5e89ba28a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1934&q=80",
+        "source": "https://images.pexels.com/photos/65768/pexels-photo-65768.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        "image": "https://images.pexels.com/photos/65768/pexels-photo-65768.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
         "price": {
           "amount": 424293,
           "currency": "USD"
@@ -159,13 +144,11 @@
       {
         "id": "24",
         "authorId": "Igj-hMfQb",
-        "location": "New Zealand",
-        "title": "Cottage getaway outside of Auckland, New Zealand",
+        "location": "San Diego",
+        "title": "Shiva friends",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur finibus, ligula eu eleifend consequat, sem metus dignissim purus, et sodales eros ligula non lacus. Maecenas lacinia nibh at semper efficitur. Fusce tincidunt, mi non tincidunt faucibus, neque velit hendrerit tortor, non fermentum nisi tortor at dui.",
-        "source": "https://unsplash.com/photos/DI5eFSYszy0",
-        "image": "https://images.unsplash.com/photo-1520190282873-afe1285c9a2a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2281&q=80",
-        "image2": "https://images.unsplash.com/photo-1464288550599-43d5a73451b8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2272&q=80",
-        "image3": "https://images.unsplash.com/photo-1504624720567-64a41aa25d70?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2255&q=80",
+        "source": "https://images.pexels.com/photos/1020037/pexels-photo-1020037.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        "image": "https://images.pexels.com/photos/1020037/pexels-photo-1020037.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
         "price": {
           "amount": 21039,
           "currency": "USD"
@@ -174,13 +157,11 @@
       {
         "id": "25",
         "authorId": "Igj-hMfQb",
-        "location": "United States",
+        "location": "New Orleans",
         "title": "Hollywood, California home in the heart of it all",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur finibus, ligula eu eleifend consequat, sem metus dignissim purus, et sodales eros ligula non lacus. Maecenas lacinia nibh at semper efficitur. Fusce tincidunt, mi non tincidunt faucibus, neque velit hendrerit tortor, non fermentum nisi tortor at dui.",
-        "source": "https://unsplash.com/photos/PEaAKHpBTzw",
-        "image": "https://images.unsplash.com/photo-1554094830-addc7e887420?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2700&q=80",
-        "image2": "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2251&q=80",
-        "image3": "https://images.unsplash.com/photo-1563298723-dcfebaa392e3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2248&q=80",
+        "source": "https://images.pexels.com/photos/2774556/pexels-photo-2774556.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        "image": "https://images.pexels.com/photos/2774556/pexels-photo-2774556.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
         "price": {
           "amount": 19382,
           "currency": "USD"
@@ -189,13 +170,11 @@
       {
         "id": "27",
         "authorId": "Igj-hMfQb",
-        "location": "Canada",
-        "title": "Modern, poolside retreat in Vancouver, Canada",
+        "location": "Austin",
+        "title": "Tasty delight",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur finibus, ligula eu eleifend consequat, sem metus dignissim purus, et sodales eros ligula non lacus. Maecenas lacinia nibh at semper efficitur. Fusce tincidunt, mi non tincidunt faucibus, neque velit hendrerit tortor, non fermentum nisi tortor at dui.",
-        "source": "https://unsplash.com/photos/V7HWR5o9BeY",
-        "image": "https://images.unsplash.com/photo-1539437829697-1b4ed5aebd19?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1534&q=80",
-        "image2": "https://images.unsplash.com/photo-1512916194211-3f2b7f5f7de3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80",
-        "image3": "https://images.unsplash.com/photo-1542889601-399c4f3a8402?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80",
+        "source": "https://images.pexels.com/photos/255483/pexels-photo-255483.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        "image": "https://images.pexels.com/photos/255483/pexels-photo-255483.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
         "price": {
           "amount": 22382,
           "currency": "USD"

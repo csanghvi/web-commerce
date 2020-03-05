@@ -1,28 +1,69 @@
 import React, { Component } from 'react'
 import TicketsModal from "./TicketsModal"
+import { connect } from 'react-redux';
+import { signIn, signOut, setRelayUrl } from "../actions";
+import { Link } from "react-router-dom";
+import data from "../api/db.json"
+import Carousel from "./Carousel"
 
-export default class ListingDetails extends Component {
+
+
+class ListingDetails extends Component {
     constructor(props) {
         super(props)
     
         this.state = {
-             id:1
+             listing:null
         }
     }
 
     componentDidMount(){
         const { id } = this.props.id
         console.log('Id is %o', id)
+        var listing = data.listings.filter(listing => {
+            if (listing.id === id) {
+                return listing
+            }
+        })
+        console.log('listing is %o', listing[0])
+        this.setState({
+            listing:listing[0]
+        })
+    }
+
+    setComeBackUrl = () => {
+        console.log('Logging this comeback url %o', this.state.listing.id)
+        this.props.setRelayUrl(`/listings/` + this.state.listing.id)
+        return 
     }
     
+    renderTicketsModal = () => {
+        if (this.state.id){
+            return (
+                <TicketsModal id={this.state.id} />
+            )
+        } else {
+            return (<div/>)
+        }
+    }
     render() {
+        if (this.state.listing){
+            var source = this.state.listing.source
+            var location = this.state.listing.location
+            var image = this.state.listing.image;
+            var image2 = this.state.listing.image2 || "";
+            var title = this.state.listing.title || ""
+            var desc = this.state.listing.description || ""
+            var title = this.state.listing.title || ""
+        }
+        const url =  source || ""
         return (
-            <div className="ui stretched two column grid">
-                    <div className="column"><img src="https://images.unsplash.com/photo-1528909514045-2fa4ac7a08ba?ixlib=rb-1.2.1&auto=format&fit=crop&w=2700&q=80" class="ui image" /></div>
+            <div className="ui two column grid">
+                    <div className="column centered"><Carousel source={source} image={image} image2={image2} legend={location}/></div>
                     <div class="column centered">
                         <div class="segment"> 
-                            <span className="heading-primary">Event Title </span>
-                            <span>Event Details: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur finibus, ligula eu eleifend consequat, sem metus dignissim purus, et sodales eros ligula non lacus. Maecenas lacinia nibh at semper efficitur. Fusce tincidunt, mi non tincidunt faucibus, neque velit hendrerit tortor, non fermentum nisi tortor at dui.</span>
+                            <span className="heading-primary">{title} </span>
+                            <span>Event Details: {desc}.</span>
                         </div>
                         <div class="segment"> 
                             <span className="heading-tertiary">Event Details: Event organizer</span>
@@ -34,7 +75,10 @@ export default class ListingDetails extends Component {
                             </time>
                         </div>
                         <div class="segment">
-                            <TicketsModal />
+                            {this.props.isSignedIn ? this.props.id ?
+                             <TicketsModal id={this.props.id.id} /> : null
+                             :
+                            <button className="btn btn-full" onClick={this.setComeBackUrl}><Link to = '/login'>Login to buy tickets</Link></button> }
                         </div>
                     </div>
             </div>
@@ -42,3 +86,18 @@ export default class ListingDetails extends Component {
         )
     }
 }
+
+
+
+const mapStateToProps = state => {
+    return {
+      currentUserObj: state.auth.userObj,
+      isSignedIn: state.auth.isSignedIn,
+      relayUrl: state.relay.relayUrl
+    };
+  };
+  
+  export default connect(
+    mapStateToProps,
+    { signIn, signOut, setRelayUrl }
+  )(ListingDetails);

@@ -35,8 +35,60 @@ const apiClient = {
               });
           });
     },
-    logout: async function () {
+    createPaymentIntent: async function (listingId, listingQty, listingCurrency) {
 
+        return new Promise((resolve, reject) => {
+            API
+              .post(`/api/v1/payments/create-payment-intent`, {
+                "listingId":listingId, "listingQty":listingQty,listingCurrency 
+              })
+              .then(rsp => {
+                resolve(rsp);
+                return;
+              })
+              .catch(error => {
+                console.log(error);
+                reject(error.message);
+                return;
+              });
+          });
+
+    },
+    createCheckoutSession: async function (listingId, amount, quantity) {
+      return new Promise((resolve, reject) => {
+        console.log('Sending request to create sessoin %o', listingId)
+        const data = {
+          quantity:quantity,
+          amount: amount,
+          id:listingId
+        }
+        API
+          .post(`/api/v1/payments/checkout-session`, data)
+          .then(rsp => {
+            resolve(rsp);
+            return;
+          })
+          .catch(error => {
+            console.log(error);
+            reject(error.message);
+            return;
+          });
+      });
+    },
+    getCheckoutSession: async function (sessionId) {
+      return new Promise((resolve, reject) => {
+        API
+          .get(`/api/v1/payments/checkout-session?sessionId=${sessionId}`)
+          .then(rsp => {
+            resolve(rsp);
+            return;
+          })
+          .catch(error => {
+            console.log(error);
+            reject(error.message);
+            return;
+          });
+      });
     }
 
 }

@@ -36,12 +36,10 @@ export default class ListingsList extends Component {
               <div className="clip">
                 {l.title && (
                   <Link to={`/listings/` + l.id}>
-                    <a>
                       {<img src={l.image} />}
                       <div className="overlay" />
                       <h2>{l.location}</h2>
                       <h3>{l.title}</h3>
-                    </a>
                   </Link>
                 )}
               </div>

@@ -191,13 +191,13 @@ export default class CreateQuizContent extends Component {
     if (Object.prototype.hasOwnProperty.call(this.props, 'match') && this.props.match.params.id) {
       return (
         <div className='form-group'>
-          <input type='submit' value='Update Question' className='btn btn-primary' />
+          <input type='submit' value='Update Listing' className='btn btn-primary' />
         </div>
       )
     } else {
       return (
-        <div className='form-group'>
-          <input type='submit' value='Create Question' className='btn btn-primary' />
+        <div style={{textAlign: "center"}} className='form-group'>
+          <input type='submit' value='Create Listing' className='btn btn-half' />
         </div>
       )
     }
@@ -239,7 +239,7 @@ export default class CreateQuizContent extends Component {
                   <textarea
                     className='form-control'
                     value={this.state.question}
-                    placeholder='Copy JSON object from Slack Block Kit builder'
+                    placeholder='Description'
                     cols={40}
                     rows={10}
                     onChange={this.handleChangeQuestion}
@@ -248,7 +248,7 @@ export default class CreateQuizContent extends Component {
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column width={4} textAlign='right'>
-                  <label><strong>Type of content:</strong> </label>
+                  <label><strong>Date of event:</strong> </label>
                 </Grid.Column>
                 <Grid.Column width={12}>
                   <Menu compact>

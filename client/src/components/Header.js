@@ -26,7 +26,6 @@ class Header extends Component{
                 </React.Fragment>
                 :  
                 <React.Fragment>
-                  <li className='navigation_list'><Logout /></li>
                   <li className='navigation_list'><Link to='/new'> <Icon name='plus' /></Link></li>
                 </React.Fragment>}
             </ul>

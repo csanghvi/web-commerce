@@ -9,7 +9,7 @@ export default class ContentList extends Component {
         super(props);
         this.onChangeContentType = this.onChangeContentType.bind(this);
         this.state = {
-          contentType:'Onboarding'
+          contentType:'Purchases'
       };
     }
 
@@ -26,16 +26,16 @@ export default class ContentList extends Component {
       render() {
         return (
             <div>
-            <div>
-              <Menu attached='top' tabular>
-                <Menu.Item className="heading-secondary" name='Experiences' value= 'Purchases' active={this.state.contentType === 'Purchases'} onClick={this.onChangeContentType} />
-                <Menu.Item className="heading-secondary" name='Listings' value='Listings' active={this.state.contentType === 'Listings'} onClick={this.onChangeContentType} />
-                {/*
-                <Menu.Item name='Questions' active={this.state.contentType === 'Questions'} onClick={this.onChangeContentType} />
-                <Menu.Item name='Tips' active={this.state.contentType === 'Tips'} onClick={this.onChangeContentType} />
-                */}
-              </Menu>
-            </div>
+              <div>
+                <Menu attached='top' tabular>
+                  <Menu.Item className="heading-secondary" name='Experiences' value= 'Purchases' active={this.state.contentType === 'Purchases'} onClick={this.onChangeContentType} />
+                  <Menu.Item className="heading-secondary" name='Listings' value='Listings' active={this.state.contentType === 'Listings'} onClick={this.onChangeContentType} />
+                  {/*
+                  <Menu.Item name='Questions' active={this.state.contentType === 'Questions'} onClick={this.onChangeContentType} />
+                  <Menu.Item name='Tips' active={this.state.contentType === 'Tips'} onClick={this.onChangeContentType} />
+                  */}
+                </Menu>
+              </div>
             {this.state.contentType === 'Purchases' && (
               <MyPurchases/>
             )}

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Component } from 'react';
 import { connect } from "react-redux";
-import { signIn, signOut } from "../actions";
+import { signIn, signOut, setRelayUrl } from "../actions";
 import { Redirect } from "react-router-dom";
 
 class SignIn extends Component {
@@ -18,7 +18,7 @@ class SignIn extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.loginAsBuyer = this.loginAsBuyer.bind(this);
         this.loginAsSeller = this.loginAsSeller.bind(this);
-        this.redirectToProfile = this.redirectToProfile.bind(this);
+        this.redirectAfterLogin = this.redirectAfterLogin.bind(this);
       }
 
       handleChange(event) {
@@ -33,8 +33,8 @@ class SignIn extends Component {
     
       loginAsBuyer() {
         this.setState({
-          email: 'buyer@.com',
-          password: 'test',
+          email: 'cbs@cbs.com',
+          password: 'cbs@cbs.com',
         });
       }
     
@@ -55,9 +55,13 @@ class SignIn extends Component {
 
       }
 
-    redirectToProfile = () => {
+    redirectAfterLogin = () => {
       if (this.props.isSignedIn) {
-        return <Redirect to="/profile" />;
+        if (this.props.relayUrl){
+          return <Redirect to={this.props.relayUrl} />;
+        } else {
+          return <Redirect to="/profile" />;
+        }
       }
     }
 
@@ -67,10 +71,10 @@ class SignIn extends Component {
         return (
             <div className="login">
                 <div>
-                    <h2 class="heading-secondary">
+                    <h2 className="heading-secondary">
                         Sign in
                     </h2>
-             </div>
+                </div>
             <p className="supporting-text">
               You can sign in with your own account, or use one of our demo
               accounts.
@@ -116,7 +120,7 @@ class SignIn extends Component {
                 {this.state.error && `Error: ${this.state.error}`}
               </p>
             </form>
-            {this.redirectToProfile()}
+            {this.redirectAfterLogin()}
           </div>
   
          )
@@ -127,11 +131,12 @@ const mapStateToProps = state => {
   return {
     currentUserObj: state.auth.userObj,
     isSignedIn: state.auth.isSignedIn,
-    loginError: state.auth.loginError 
+    loginError: state.auth.loginError,
+    relayUrl: state.relay.relayUrl
   };
 };
 
 export default connect(
   mapStateToProps,
-  { signIn, signOut }
+  { signIn, signOut, setRelayUrl }
 )(SignIn);

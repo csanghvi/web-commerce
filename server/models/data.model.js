@@ -53,11 +53,11 @@ const Users = new Schema({
   myPurchases: {
     type: [String]
   },
-  stripeCustomerId: {
-    type: String
+  stripeCustomerObject: {
+    type: Object
   },
-  stripeAccountId: {
-    type: String
+  stripeAccountObject: {
+    type: Object
   }
 }, {
   strict: false

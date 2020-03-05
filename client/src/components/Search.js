@@ -38,7 +38,7 @@ class Search extends Component {
 
                             <div class="form__group">
                                 <input type="text" class="form__input" placeholder="San Francisco" id="name" />
-                                <label for="name" class="form__label">Location</label>
+                                <label class="form__label">Location</label>
                             </div>
 
                             <div class="form__group">
