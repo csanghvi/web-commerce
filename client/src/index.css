@@ -724,3 +724,38 @@ a:hover {
   margin-top: 5rem;
 
 }
+
+
+.build-list {
+  font-size: large;
+  width: 50%;
+}
+
+.form-control  {
+  margin: 0 .25rem;
+  min-width: 125px;
+  border: 1px solid #eee;
+  border-left: 3px solid;
+  border-right: 3px solid;
+  border-radius: 5px;
+  transition: border-color .5s ease-out;
+}
+
+.form-control input:optional {
+  border-left-color: #999;
+}
+.form-control input:required {
+  border-left-color: palegreen;
+}
+.form-control input:invalid {
+  border-left-color: salmon;
+}
+
+.add-new-images {
+  margin-top: 16px;
+}
+
+.edit-listing {
+  float: right;
+  text-align: right;
+}

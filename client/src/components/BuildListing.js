@@ -1,203 +1,228 @@
 import React, { Component, useState } from 'react'
 import axiosApi from '../api/axiosApi'
 import { Menu, Dropdown, Grid } from 'semantic-ui-react'
-import SemanticDatepicker from 'react-semantic-ui-datepickers';
-import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
-
-var FormData = require('form-data')
-
-
-const AppWithBasic = () => {
-    const [currentDate, setNewDate] = useState(null);
-    const onChange = (event, data) => setNewDate(data.value);
-   
-    return <SemanticDatepicker  onChange={onChange} />;
-  };
-
-const ddcontenttype = [
-  { key: 1, text: 'Onboarding', value: 'onboarding' }
-]
+import DatePicker from './DatePicker'
+import apiClient from '../api/apiClient'
+import data from "../api/db.json"
 
 function validate (state) {
   // we are going to store errors for all fields
   // in a signle array
   const errors = []
 
-  if (state.question.length === 0) {
-    errors.push('Question can not be empty')
+  if (state.title.length === 0) {
+    errors.push('Title can not be empty')
   }
-  state.options.map(option => {
-    if (option === '') {
-      errors.push('Options cannot be left empty')
+
+  if (state.details.length === 0) {
+    errors.push('Details can not be empty')
+  }
+
+  if (state.startDate.length === 0) {
+    errors.push('Date can not be empty')
+  }
+
+  if (state.location.length === 0) {
+    errors.push('Location can not be empty')
+  }
+
+  state.images.map(image => {
+    if (image === '') {
+      errors.push('Images cannot be left empty')
     }
     return null
   })
 
-  if (state.help.length === 0) {
-    errors.push('Help cannot be empty')
-  }
   return errors
 }
 
-export default class CreateQuizContent extends Component {
+export default class BuildListing extends Component {
   constructor (props) {
     super(props)
 
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleChangeQuestion = this.handleChangeQuestion.bind(this)
-    this.handleChangeAnswer = this.handleChangeAnswer.bind(this)
-    this.handleChangeOptions = this.handleChangeOptions.bind(this)
-    this.handleChangeHelp = this.handleChangeHelp.bind(this)
-    this.handleChangeFeedback = this.handleChangeFeedback.bind(this)
-    this.handleContentTypeChange = this.handleContentTypeChange.bind(this)
+    this.handleChangeTitle = this.handleChangeTitle.bind(this)
+    this.handleChangeDetails = this.handleChangeDetails.bind(this)
+    this.handleChangeDate = this.handleChangeDate.bind(this)
+    this.handleChangeImages = this.handleChangeImages.bind(this)
+    this.handleChangeLocation = this.handleChangeLocation.bind(this)
+    this.addNewImage = this.addNewImage.bind(this)
+    this.renderImageCollection = this.renderImageCollection.bind(this)
+
 
     this.state = {
       errors: [],
-      question: '',
-      options: ['', '', ''],
+      title: '',
       answer: 1,
       help: '',
-      feedback: '',
+      details: '',
       number: 1,
-      result: ''
+      result: '',
+      numImages:1,
+      images:[],
+      startDate:'',
+      endDate:'',
+      location:''
     }
   }
 
-  handleChangeQuestion (e) {
+  addNewImage (e) {
+    console.log('Adding new images')
+    this.setState(prevState => ({
+      numImages:prevState.numImages+1
+    }))
+  }
+
+  handleChangeTitle (e) {
     this.setState({
-      question: e.target.value
+      title: e.target.value
     })
   }
 
-  handleChangeHelp (e) {
+
+  handleChangeDetails (e) {
+    console.log('Details is %o', e.target.value)
     this.setState({
-      help: e.target.value
+      details: e.target.value
     })
   }
 
-  handleChangeFeedback (e) {
+  handleChangeDate (event,data) {
+    console.log("Data value is %o", data)
     this.setState({
-      feedback: e.target.value
+      startDate:data.value[0],
+      endDate:data.value[1]
     })
   }
 
-  handleChangeAnswer (e, { value }) {
-    console.log('Value of answe is %o', value)
+  handleChangeImages (e) {
+    console.log("Before adding new image is %o", this.state.images)
     this.setState({
-      answer: Number(value)
+      images:[...this.state.images, e.target.value]
     })
   }
 
-  handleChangeOptions (e) {
-    const { name, value } = e.target
-    const { options } = this.state
-    console.log('key of content is %o & value is %o', name, value)
-    options[name] = value
+  handleChangeLocation (e) {
     this.setState({
-      options
+      location:e.target.value
     })
   }
 
-  handleContentTypeChange (e, data) {
-    this.setState({
-      contentType: data.value
-      // content:updated
-    })
-  }
 
   componentDidMount () {
-    if (Object.prototype.hasOwnProperty.call(this.props, 'match') && this.props.match.params.id) {
-      axiosApi.get(`quiz/${this.props.match.params.id}`).then(response => {
-        console.log('Response received is %o', response)
+    if (Object.prototype.hasOwnProperty.call(this.props, 'id') && this.props.id) {
+      const  id  = this.props.id
+      console.log('Id is %o', id)
+      /*
+      var listing = data.listings.filter(listing => {
+          if (listing.id === id) {
+              return listing
+          }
+      })
+      console.log("listing is %o", listing[0])
         this.setState({
-          question: JSON.stringify(response.data.question),
-          answer: response.data.answer - 1,
-          help: response.data.help,
-          contentType: response.data.contentType,
-          feedback: response.data.feedback,
-          options: response.data.options
+          title: listing[0].title,
+          details: listing[0].description,
+          images: [listing[0].source],
+          location: listing[0].location
         })
-      }).catch(error => { console.log(error) })
-    } else {
-      axiosApi.get('quiz/').then(response => {
-        if (Object.prototype.hasOwnProperty.call(response.data, 'status') && !response.data.status) {
-          this.setState({
-            result: response.data.error
-          })
-        } else {
-          this.setState({
-            number: response.data.length + 1
-          })
-        }
-      }).catch(error => { console.log(error) })
-    }
+        */
+       apiClient.getListing(id)
+       .then (rsp => {
+        console.log("listing is %o", rsp)
+        this.setState({
+          title: rsp.title,
+          details: rsp.description,
+          images: rsp.images,
+          numImages: rsp.images.length,
+          location: rsp.location
+        })
+       })
+       .catch(err => {
+         console.log("err in getting a listing with id %o", id)
+       })
+    } 
   }
 
   handleSubmit (e) {
     e.preventDefault()
+    console.log('Submitting')
     const errors = validate(this.state)
     if (errors.length > 0) {
       this.setState({ errors })
       return
     }
-
-    const data = new FormData()
-
-    var newQuestion = {
-      question: JSON.parse(this.state.question),
-      options: this.state.options,
-      help: this.state.help,
-      feedback: this.state.feedback,
-      contentType: this.state.contentType,
-      answer: this.state.answer + 1,
-      number: this.state.number
+    var newListing = {
+      title: this.state.title,
+      details: this.state.details,
+      date: this.state.date,
+      images: this.state.images,
+      location: this.state.location
     }
-
-    data.append('quiz', JSON.stringify(newQuestion))
-    if (Object.prototype.hasOwnProperty.call(this.props, 'match') && this.props.match.params.id) {
-      axiosApi.post('quiz/update/' + this.props.match.params.id, data).then(res => {
-        if (Object.prototype.hasOwnProperty.call(res.data, 'status') && !res.data.status) {
-          this.setState({ result: res.data.error })
-        }
-        this.setState({ result: 'Successfully updated question' })
+    if (Object.prototype.hasOwnProperty.call(this.props, 'id') && this.props.id) {
+      apiClient.updateListing(this.props.id, newListing)
+      .then(res => {
+        this.setState({ result: 'Successfully added listing' })
       }).catch(error => {
-        console.log('Failed to add Question %o', error)
-        this.setState({ result: `Question Failed ${error}` })
+        console.log('Failed to add listing %o', error)
+        this.setState({ result: `Listing Failed ${error}` })
       })
     } else {
-      axiosApi.post('quiz/add', data).then(res => {
-        this.setState({ result: 'Successfully added question' })
+      apiClient.createListing(newListing)
+      .then(res => {
+        this.setState({ result: 'Successfully added listing' })
       }).catch(error => {
-        console.log('Failed to add question %o', error)
-        this.setState({ result: `Question Failed ${error}` })
+        console.log('Failed to add listing %o', error)
+        this.setState({ result: `Listing Failed ${error}` })
       })
     }
     if (!Object.prototype.hasOwnProperty.call(this.props, 'match')) {
       this.setState(prevState => ({
         errors: [],
         number: 0,
-        help: '',
-        feedback: '',
-        contentType: '',
-        question: '',
-        answer: 1,
-        options: ['', '', ''],
+        title: '',
+        location: '',
+        images: [],
+        details: '',
+        numImages: 1,
         result: ''
       }))
     }
+  }
+
+  renderImageCollection () {
+    var numImages = Array.apply(null, Array(this.state.numImages))
+    console.log('Num images is %o & array is %o', this.state.numImages, numImages)
+    let listItems = [];
+    listItems = numImages.map((image, index) => (
+                <Grid.Row>
+                  <Grid.Column width={12}>
+                    
+                  <input className="form-control" type="url" name="url" id={index}
+                                    placeholder="https://example.com"
+                                    pattern="https://.*" size="30"
+                                    required  
+                                    onBlur ={this.handleChangeImages} 
+                                    style={{width:"50%"}}
+                                    />
+                  </Grid.Column>
+               </Grid.Row>
+
+                ))
+    return listItems;
   }
 
   renderSubmitButton () {
     if (Object.prototype.hasOwnProperty.call(this.props, 'match') && this.props.match.params.id) {
       return (
         <div className='form-group'>
-          <input type='submit' value='Update Listing' className='btn btn-primary' />
+          <input type='submit' value='Update Listing' onClick={this.handleSubmit} className='btn btn-primary' />
         </div>
       )
     } else {
       return (
         <div style={{textAlign: "center"}} className='form-group'>
-          <input type='submit' value='Create Listing' className='btn btn-half' />
+          <input type='submit' value='Create Listing' onClick={this.handleSubmit} className='btn btn-half' />
         </div>
       )
     }
@@ -206,7 +231,6 @@ export default class CreateQuizContent extends Component {
   render () {
     return (
       <div style={{ marginTop: 10 }}>
-        <form onSubmit={this.handleSubmit}>
           {this.state.errors.map((error, index) => (
             <p> <strong><font color='red' size='3' key={index}>Error: {error} </font></strong></p>
           ))}
@@ -216,65 +240,76 @@ export default class CreateQuizContent extends Component {
             <p> <strong><font color='red' size='3' key={this.state.result}>Result: {this.state.result} </font></strong></p>}
           <div className='form-group'>
             <Grid container>
-            <Grid.Row>
+             <Grid.Row>
                 <Grid.Column width={4} textAlign='right'>
-                  <label><strong>Event Title: </strong> </label>
+                  <label><strong>Title: </strong> </label>
                 </Grid.Column>
                 <Grid.Column width={12}>
 
                   <input
                     type='text'
                     className='form-control'
-                    value={this.state.feedback}
-                    onChange={this.handleChangeFeedback}
+                    value={this.state.title}
+                    onChange={this.handleChangeTitle}
+                    style={{width:"50%"}}
                   />
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column width={4} textAlign='right'>
-                  <label><strong>Event Details: </strong> </label>
+                  <label><strong>Details: </strong> </label>
                 </Grid.Column>
                 <Grid.Column width={12}>
 
                   <textarea
                     className='form-control'
-                    value={this.state.question}
+                    value={this.state.details}
                     placeholder='Description'
                     cols={40}
                     rows={10}
-                    onChange={this.handleChangeQuestion}
+                    onChange={this.handleChangeDetails}
                   />
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column width={4} textAlign='right'>
-                  <label><strong>Date of event:</strong> </label>
+                  <label><strong>Dates:</strong> </label>
                 </Grid.Column>
                 <Grid.Column width={12}>
                   <Menu compact>
-                    <AppWithBasic />
+                    <DatePicker handleChangeDate={this.handleChangeDate} type={"range"}/>
                   </Menu>
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column width={4} textAlign='right'>
-                  <label><strong>Helpful Images: </strong> </label>
+                  <label><strong>Location:</strong> </label>
                 </Grid.Column>
                 <Grid.Column width={12}>
-
-                <div>
-              {this.state.result.length > 0 &&
-                <p> <strong><font color='green' size="3" key={this.state.result}>Result: {this.state.result} </font></strong></p>
-              }
-                <input type="file" name="Add Images" id="" onChange={this.onUpload} multiple />
-                <button onClick={this.onSubmit}>Upload</button>
-              </div>
+                  <input
+                    type='text'
+                    className='form-control'
+                    value={this.state.location}
+                    onChange={this.handleChangeLocation}
+                    placeholder="Comma separated list of cities"
+                    style={{width:"50%"}}
+                  />
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column width={4} textAlign='right'>
+                  <label><strong>Helpful Image URLs: </strong> </label>
+                </Grid.Column>
+                <Grid.Column width={12}>
+                    <div>
+                      {this.renderImageCollection()}
+                    </div>
+                   <div className="add-new-images"> <button><i className="plus icon" onClick={this.addNewImage}></i></button></div>
                 </Grid.Column>
               </Grid.Row>
             </Grid>
           </div>
           {this.renderSubmitButton()}
-        </form>
       </div>
     )
   }

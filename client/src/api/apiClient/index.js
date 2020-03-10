@@ -89,7 +89,67 @@ const apiClient = {
             return;
           });
       });
-    }
+    },
+    createListing: async function (data) {
+      return new Promise((resolve, reject) => {
+        API
+          .post(`/api/v1/listing/new`, data)
+          .then(rsp => {
+            resolve(rsp);
+            return;
+          })
+          .catch(error => {
+            console.log(error);
+            reject(error.message);
+            return;
+          });
+      });
+    },
+    updateListing: async function (id, data) {
+      return new Promise((resolve, reject) => {
+        API
+          .post(`/api/v1/listing/edit/${id}`, data)
+          .then(rsp => {
+            resolve(rsp);
+            return;
+          })
+          .catch(error => {
+            console.log(error);
+            reject(error.message);
+            return;
+          });
+      });
+    },
+    getAllListings: async function (filter) {
+      return new Promise((resolve, reject) => {
+        API
+          .get(`/api/v1/listing/all?filter=${JSON.stringify(filter)}`)
+          .then(rsp => {
+            resolve(rsp.data);
+            return;
+          })
+          .catch(error => {
+            console.log(error);
+            reject(error.message);
+            return;
+          });
+      });
+    },
+    getListing: async function (id) {
+      return new Promise((resolve, reject) => {
+        API
+          .get(`/api/v1/listing/${id}`)
+          .then(rsp => {
+            resolve(rsp.data);
+            return;
+          })
+          .catch(error => {
+            console.log(error);
+            reject(error.message);
+            return;
+          });
+      });
+    },
 
 }
 

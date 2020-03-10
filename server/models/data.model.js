@@ -24,8 +24,11 @@ const Listings = new Schema({
     dateCreated:{
       type:Date
     }, 
-    imageUrl: {
+    images: {
       type:[String]
+    },
+    location:{
+      type:String
     }
 },{ strict: false });
 

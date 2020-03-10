@@ -1,22 +1,16 @@
 import React, { Component, useState } from 'react'
 import { NavLink, Link, withRouter } from 'react-router-dom'
+import DatePicker from '../components/DatePicker'
 
-import SemanticDatepicker from 'react-semantic-ui-datepickers';
-import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
- 
-const AppWithBasic = () => {
-  const [currentDate, setNewDate] = useState(null);
-  const onChange = (event, data) => setNewDate(data.value);
- 
-  return <SemanticDatepicker type="range" onChange={onChange} />;
-};
 
 class Search extends Component {
     constructor(props) {
         super(props)
         this.filterListings = this.filterListings.bind(this)
         this.state = {
-             
+            startDate:'',
+            endDate:'',
+            location:''
         }
     }
     
@@ -24,30 +18,51 @@ class Search extends Component {
         console.log("Tests")
     }
 
+    handleChangeDate = (event,data) => {
+        this.setState({
+        startDate:data.value[0],
+        endDate:data.value[1]
+        })
+    }
+
+    handleChangeLocation = (event) => {
+        this.setState({
+            location:event.target.value
+        })
+    }
+
+
     render() {
         return (
                     <div>                    
-                            <div class="u-margin-bottom-medium">
-                                <h2 class="heading-secondary">
+                            <div className="u-margin-bottom-medium">
+                                <h2 className="heading-secondary">
                                 Book your next experience
                                 </h2>
                             </div>
 
 
-                            <form action="#" class="form">
+                            <form action="#" className="form">
 
-                            <div class="form__group">
-                                <input type="text" class="form__input" placeholder="San Francisco" id="name" />
-                                <label class="form__label">Location</label>
+                            <div className="form__group">
+                                <input type="text" className="form__input" placeholder="San Francisco" id="name" onChange={this.handleChangeLocation}/>
+                                <label className="form__label">Location</label>
                             </div>
 
-                            <div class="form__group">
-                                <AppWithBasic />              
+                            <div className="form__group">
+                                <DatePicker handleChangeDate={this.handleChangeDate} type={"range"} />              
                             </div>
 
-                            <div class="form__group">
-                                <button className="btn--green"><Link to="/listings" className="btn--text">Lets' go &rarr;</Link></button>
-                            </div>
+                            <div className="form__group">
+                            <button className="btn--green" ><Link to={{
+                                                                        pathname: "/listings",
+                                                                        state: { 
+                                                                             location: this.state.location,
+                                                                             startDate: this.state.startDate,
+                                                                             endDate: this.state.endDate
+                                                                            }
+                                                                        }}
+                                                                        className="btn--text">Lets' go &rarr;</Link></button>                            </div>
                             </form>
     
                      </div>

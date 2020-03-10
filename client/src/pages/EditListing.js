@@ -6,7 +6,7 @@ import { signIn, signOut } from "../actions";
 
 import Header from "../components/Header"
 
-class NewListing extends Component {
+class EditListing extends Component {
     render() {
         return (
             <div>
@@ -16,7 +16,7 @@ class NewListing extends Component {
                 <div className = "ui container">
                     {this.props.isSignedIn ?
                     <React.Fragment>
-                        <BuildListing />
+                        <BuildListing id={this.props.match.params.id}/>
                     </React.Fragment>
                     :  
                     <React.Fragment>
@@ -39,4 +39,4 @@ const mapStateToProps = state => {
   export default connect(
     mapStateToProps,
     { signIn, signOut }
-  )(NewListing);
+  )(EditListing);

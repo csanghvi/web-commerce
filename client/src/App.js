@@ -11,6 +11,7 @@ import Profile from "./pages/Profile";
 import NewListing from "./pages/NewListing"
 import UserOptions from "./components/UserOptions"
 import Checkout from './pages/Checkout';
+import EditListing from './pages/EditListing';
 
 
 class App extends Component {
@@ -32,10 +33,11 @@ class App extends Component {
                 <Route path="/" exact component={Home} />
                 <Route path="/register" exact component={Register} />
                 <Route path="/login" exact component={Login} />
+                <Route path="/listings/new" exact component={NewListing} />
                 <Route path="/listings" exact component={List} />
+                <Route path="/listings/edit/:id" exact component={EditListing} />
                 <Route path="/listings/:id" component={Details} />
                 <Route path="/profile" component={Profile} />
-                <Route path="/new" component={NewListing} />
                 <Route path="/checkout" component={Checkout} />
               </Switch>
           </BrowserRouter>       
