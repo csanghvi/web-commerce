@@ -5,7 +5,8 @@ module.exports =  () => {
   console.log('starting connection')
   const mongoDB = 'mongodb://localhost:27017/commerce';
   mongoose.connect(mongoDB, {
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useFindAndModify: false 
   });
   const db = mongoose.connection;
   db.on('error', console.error.bind(console, 'MongoDB connection error:'));

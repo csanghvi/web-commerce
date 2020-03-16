@@ -44,22 +44,24 @@ const CheckoutForm = (props) => {
   const [processing, setProcessing] = useState(false);
   const [clientSecret, setClientSecret] = useState(null);
 
-  console.log("props.clientSecret is %o", props.clientSecret)
+
 
   const stripe = useStripe();
   const elements = useElements();
 
   useEffect(() => {
     // Update the document title using the browser API
-    apiClient.createPaymentIntent({listingId: props.id, quantity:10, currency:"usd"})
+    apiClient.createPaymentIntent({stripeCustomerId: props.currentUserObj.stripeCustomerId,listingId: props.id, quantity:10})
     .then (res => {
       console.log("Res of createPaymentIntent %o",res);
       setClientSecret(res.data.clientSecret);
+      console.log("props.clientSecret is %o", props.clientSecret)
+
     })
+    
     .catch (err => {
       console.log('Payment Intent could not be created.', err);
     })
-    console.log("props.clientSecret is %o", clientSecret)
 
     /*
       Set Redux value for clientSecret
@@ -93,7 +95,7 @@ const CheckoutForm = (props) => {
         payment_method: {
           card: card
         },
-        receipt_email: props.currentUserObj,
+        receipt_email: props.currentUserObj.email,
         setup_future_usage: saveCard ? "off_session" : ""
       })
       .then(function(result) {

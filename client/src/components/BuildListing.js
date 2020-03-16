@@ -45,6 +45,8 @@ export default class BuildListing extends Component {
     this.handleChangeDetails = this.handleChangeDetails.bind(this)
     this.handleChangeDate = this.handleChangeDate.bind(this)
     this.handleChangeImages = this.handleChangeImages.bind(this)
+    this.handleChangePrice = this.handleChangePrice.bind(this)
+    this.handleChangeMaxQty = this.handleChangeMaxQty.bind(this)
     this.handleChangeLocation = this.handleChangeLocation.bind(this)
     this.addNewImage = this.addNewImage.bind(this)
     this.renderImageCollection = this.renderImageCollection.bind(this)
@@ -56,13 +58,14 @@ export default class BuildListing extends Component {
       answer: 1,
       help: '',
       details: '',
-      number: 1,
       result: '',
       numImages:1,
       images:[],
       startDate:'',
       endDate:'',
-      location:''
+      location:'',
+      price:0,
+      maxQty:2
     }
   }
 
@@ -76,6 +79,18 @@ export default class BuildListing extends Component {
   handleChangeTitle (e) {
     this.setState({
       title: e.target.value
+    })
+  }
+
+  handleChangePrice (e) {
+    this.setState({
+      price: e.target.value
+    })
+  }
+
+  handleChangeMaxQty (e) {
+    this.setState({
+      maxQty: e.target.value
     })
   }
 
@@ -95,12 +110,32 @@ export default class BuildListing extends Component {
     })
   }
 
-  handleChangeImages (e) {
-    console.log("Before adding new image is %o", this.state.images)
-    this.setState({
-      images:[...this.state.images, e.target.value]
-    })
-  }
+  handleChangeImages (e, index) {
+    console.log("Changing image at index %o & value of new image is %o", index, e.target.value)
+    if (e.target.value.includes("http")) {
+      if (index < this.state.images.length){
+        if (index === 0) {
+          this.setState({
+            images:[e.target.value, ...this.state.images.slice(1,)]
+          })
+        } else if (index === this.state.images.length-1){
+          this.setState({
+            images:[...this.state.images.slice(0, this.state.images.length-1), e.target.value]
+          }) 
+        } else {
+            this.setState({
+              images:[...this.state.images.slice(0, index), e.target.value, ...this.state.images.slice(index+1, )]
+            })
+          }
+        } else {
+          this.setState({
+            images:[...this.state.images, e.target.value]
+          })
+        }
+      }
+      console.log("After adding new image is %o", this.state.images)
+    }
+  
 
   handleChangeLocation (e) {
     this.setState({
@@ -132,10 +167,12 @@ export default class BuildListing extends Component {
         console.log("listing is %o", rsp)
         this.setState({
           title: rsp.title,
-          details: rsp.description,
+          details: rsp.details,
+          numImages:rsp.images.length,
           images: rsp.images,
-          numImages: rsp.images.length,
-          location: rsp.location
+          location: rsp.location,
+          price:rsp.price,
+          maxQty:rsp.maxQty
         })
        })
        .catch(err => {
@@ -157,7 +194,9 @@ export default class BuildListing extends Component {
       details: this.state.details,
       date: this.state.date,
       images: this.state.images,
-      location: this.state.location
+      location: this.state.location,
+      maxQty: this.state.maxQty,
+      price: this.state.price
     }
     if (Object.prototype.hasOwnProperty.call(this.props, 'id') && this.props.id) {
       apiClient.updateListing(this.props.id, newListing)
@@ -179,31 +218,32 @@ export default class BuildListing extends Component {
     if (!Object.prototype.hasOwnProperty.call(this.props, 'match')) {
       this.setState(prevState => ({
         errors: [],
-        number: 0,
         title: '',
         location: '',
         images: [],
         details: '',
         numImages: 1,
-        result: ''
+        result: '',
+        maxQty:1,
+        price:0
       }))
     }
   }
 
   renderImageCollection () {
     var numImages = Array.apply(null, Array(this.state.numImages))
-    console.log('Num images is %o & array is %o', this.state.numImages, numImages)
     let listItems = [];
     listItems = numImages.map((image, index) => (
-                <Grid.Row>
+                <Grid.Row key={index}>
                   <Grid.Column width={12}>
                     
                   <input className="form-control" type="url" name="url" id={index}
                                     placeholder="https://example.com"
                                     pattern="https://.*" size="30"
                                     required  
-                                    onBlur ={this.handleChangeImages} 
+                                    onBlur ={(e) => this.handleChangeImages(e,index)} 
                                     style={{width:"50%"}}
+                                    defaultValue={this.state.images[index]}
                                     />
                   </Grid.Column>
                </Grid.Row>
@@ -213,10 +253,10 @@ export default class BuildListing extends Component {
   }
 
   renderSubmitButton () {
-    if (Object.prototype.hasOwnProperty.call(this.props, 'match') && this.props.match.params.id) {
+    if (Object.prototype.hasOwnProperty.call(this.props, 'id') && this.props.id) {
       return (
-        <div className='form-group'>
-          <input type='submit' value='Update Listing' onClick={this.handleSubmit} className='btn btn-primary' />
+        <div style={{textAlign: "center"}} className='form-group'>
+          <input type='submit' value='Update Listing' onClick={this.handleSubmit} className='btn btn-half' />
         </div>
       )
     } else {
@@ -268,6 +308,36 @@ export default class BuildListing extends Component {
                     cols={40}
                     rows={10}
                     onChange={this.handleChangeDetails}
+                  />
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column width={4} textAlign='right'>
+                  <label><strong>Price: </strong> </label>
+                </Grid.Column>
+                <Grid.Column width={12}>
+
+                  <input
+                    type='number'
+                    className='form-control'
+                    value={this.state.price}
+                    onChange={this.handleChangePrice}
+                    style={{width:"2%"}}
+                  /> per item
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column width={4} textAlign='right'>
+                  <label><strong>Max Quantity: </strong> </label>
+                </Grid.Column>
+                <Grid.Column width={12}>
+
+                  <input
+                    type='number'
+                    className='form-control'
+                    value={this.state.maxQty}
+                    onChange={this.handleChangeMaxQty}
+                    style={{width:"10%"}}
                   />
                 </Grid.Column>
               </Grid.Row>

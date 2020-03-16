@@ -12,6 +12,7 @@ import NewListing from "./pages/NewListing"
 import UserOptions from "./components/UserOptions"
 import Checkout from './pages/Checkout';
 import EditListing from './pages/EditListing';
+import OauthConnect from './pages/OauthConnect';
 
 
 class App extends Component {
@@ -39,6 +40,7 @@ class App extends Component {
                 <Route path="/listings/:id" component={Details} />
                 <Route path="/profile" component={Profile} />
                 <Route path="/checkout" component={Checkout} />
+                <Route path="/oauth/connect" component={OauthConnect} />
               </Switch>
           </BrowserRouter>       
       </div>

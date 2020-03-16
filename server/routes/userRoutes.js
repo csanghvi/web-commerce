@@ -1,54 +1,71 @@
 const express = require('express');
 const usersRoutes = express.Router();
+const [, Users] = require("../models/data.model");
+const stripe = require("../utils/stripeConfig")
 
 
 
 module.exports = (app) => {
     app.use('/api/v1/users', usersRoutes);
 
-usersRoutes.route('/getnotebooks').post(async function(req, res) {
-    console.log("received a req to get Notebooks");
-    new formidable.IncomingForm().parse(req, async (err, fields, files) => {
-      if (err) {
-        console.error('Error', err)
-        throw err
-      }
-      var user_email = JSON.parse(fields.user_email);
-      console.log("Add Notes body is %o", user_email)
-      var user = await Users.findOne({user_email:user_email});
-      if (!user) {
-          //Create a user in Database;
-          console.log("User not found");
-          res.status(400).send('fetching notebooks failed, user not found');
-        } else {
-          res.status(200).json(user.notebooks);
-        }
-      });
-  });
+    usersRoutes.route("/connect").post(async function(req, res) {
+      console.log("Received connect setup Req %o", req.body);
+      var code = req.body.code;
+      Users.findOne(
+        {
+          email: req.body.email
+        },
+        async function(err, user) {
+          try {
+            if (user) {
+              /*
+              var stripeRsp = await axios.post(
+                "https://connect.stripe.com/oauth/token",
+                bodyParameters,
+                config
+              );
+              */
+             var stripeRsp = await stripe.oauth.token({
+              grant_type: "authorization_code",
+              code
+             })
   
-  usersRoutes.route('/addnotebook').post(async function(req, res) {
-    console.log("received a req to add Notebook");
-    new formidable.IncomingForm().parse(req, async (err, fields, files) => {
-      if (err) {
-        console.error('Error', err)
-        throw err
-      }
-      var notebook = JSON.parse(fields.notebook);
-      console.log("Add Notes body is %o", notebook)
-      var user_email = JSON.parse(fields.user_email);
-      console.log("Add Notes body is %o", user_email)
-      var user = await Users.findOne({user_email:user_email});
-      if (!user) {
-          //Create a user in Database;
-          console.log("User not found");
-          res.status(400).send('Updating notebook failed, user not found');
-        } else {
-          user.notebooks.push(notebook);
-          await user.save();
-          res.status(200).json(user.notebooks);
+              console.log("Recevied rsp from stripe is %o", stripeRsp.stripe_user_id);
+  
+              let stripeAccountId = stripeRsp.stripe_user_id;
+              user.stripeAccountId = stripeRsp.stripe_user_id
+              /*
+              await user.save();
+             
+              console.log("After saving user %o", user);
+              res.status(200).json({
+                user: user
+              });
+
+              
+              var savedUser = await Users.update({_id: user._id}, {
+                stripeAccountId: stripeAccountId
+              }, function(err, affected, resp) {
+                console.log(resp);
+              })
+              */
+
+             var savedUser = await Users.findOneAndUpdate({_id: user._id}, {$set:{stripeAccountId:stripeAccountId}}, {new: true, useFindAndModify: false}) 
+              console.log("After saving user %o", savedUser);
+              res.status(200).json({
+                user: savedUser
+              });
+              
+            } else {
+              res.status(400).send("Failed to update user");
+            }
+          } catch (err) {
+              console.log("Failed with error code %o", err)
+            res.status(400).send("Failed to udpate user");
+          }
         }
-      });
-  });
+      );
+    });
 
   return usersRoutes
 }

@@ -91,7 +91,7 @@ listingsRoutes.route('/all').get(function(req, res) {
         });
   });
   
-  listingsRoutes.route('/update/:id').post(function(req, res) {
+  listingsRoutes.route('/edit/:id').post(function(req, res) {
     console.log("received a req to updat for %o", req.params.id);
     Listings.findById(req.params.id, function(err, listing) {
       if (!listing)

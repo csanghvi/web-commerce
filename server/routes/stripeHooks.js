@@ -1,6 +1,7 @@
 const express = require('express');
 const hooksRoutes = express.Router();
 const [ , Users] = require('../models/data.model');
+const stripe = require('../utils/stripeConfig')
 
 
 // Expose a endpoint as a webhook handler for asynchronous events.
@@ -8,9 +9,9 @@ const [ , Users] = require('../models/data.model');
 // https://dashboard.stripe.com/test/webhooks
 
 module.exports = (app) => {
-    app.use('/api/hooks', hooksRoutes);
+    app.use('/api/v1/hooks', hooksRoutes);
 
-    hooksRoutes.post("/", async (req, res) => {
+    hooksRoutes.post("", async (req, res) => {
         console.log('Received a hook')
         let data, eventType;
     

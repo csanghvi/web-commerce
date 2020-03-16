@@ -42,7 +42,9 @@ class ListingDetails extends Component {
           details: rsp.details,
           images: rsp.images,
           numImages: rsp.images.length,
-          location: rsp.location
+          location: rsp.location,
+          email: rsp.email,
+          id: rsp._id
         }
         this.setState({
             listing:listing
@@ -78,6 +80,8 @@ class ListingDetails extends Component {
             return <Redirect to={`/listings/edit/${this.state.listing.id}`} />;
       }
     renderEditOption = () => {
+        if (this.state.listing && this.props.currentUserObj)
+            console.log("Is signed in? %o, userObj.email is %o, this.state.listing.email is %o", this.props.isSignedIn,this.props.currentUserObj.email, this.state.listing.email )
         if (this.state.listing && this.props.isSignedIn && this.props.currentUserObj.email === this.state.listing.email)
             return (
                 <div>

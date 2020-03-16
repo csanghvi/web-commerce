@@ -21,7 +21,8 @@ loginRoutes.route('/').post(async function(req, res) {
                 const userObj = {
                   email: user.email,
                   firstName: user.firstName,
-                  lastName: user.lastName
+                  lastName: user.lastName,
+                  stripeCustomerId: user.stripeCustomerId
                 }
                 res.status(200).json({user:userObj, token:token});
               } else {

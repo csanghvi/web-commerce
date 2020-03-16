@@ -42,7 +42,6 @@ class Search extends Component {
                             </div>
 
 
-                            <form action="#" className="form">
 
                             <div className="form__group">
                                 <input type="text" className="form__input" placeholder="San Francisco" id="name" onChange={this.handleChangeLocation}/>
@@ -63,7 +62,6 @@ class Search extends Component {
                                                                             }
                                                                         }}
                                                                         className="btn--text">Lets' go &rarr;</Link></button>                            </div>
-                            </form>
     
                      </div>
                         

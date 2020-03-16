@@ -33,15 +33,15 @@ class SignIn extends Component {
     
       loginAsBuyer() {
         this.setState({
-          email: 'cbs@cbs.com',
-          password: 'cbs@cbs.com',
+          email: 'buyer@cbs.com',
+          password: 'buyer@cbs.com',
         });
       }
     
       loginAsSeller() {
         this.setState({
-          email: 'seller@.com',
-          password: 'test',
+          email: 'seller@cbs.com',
+          password: 'seller@cbs.com',
         });
       }
     
