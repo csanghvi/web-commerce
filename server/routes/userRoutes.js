@@ -67,6 +67,18 @@ module.exports = (app) => {
       );
     });
 
+    usersRoutes.route("/login-status").post(async function(req, res) {
+      console.log("Received check Login Req %o", req.body);
+      Users.findOne({ email: req.body.email }, function(err, user) {
+        if (!user) {
+          res.status(400).send("User not found");
+        } else {
+          console.log("User Found with info %o", user);
+          res.status(200).json({ user: user });
+        }
+      });
+    });
+
   return usersRoutes
 }
   

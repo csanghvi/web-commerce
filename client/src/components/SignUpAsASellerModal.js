@@ -66,9 +66,9 @@ class SignUpAsASellerModal extends React.Component {
               >
                 <div>
                     <div className="sr-legal-text">
-                        Want to setup your account?
+                    This platform uses Stripe to get you paid quickly and keep your personal and payment information secure. Thousands of companies around the world trust Stripe to process payments for their users. Set up a Stripe account to get paid with this platform
                     </div>
-                    <div className="submit-card-button">
+                    <div className="submit-card-button" style={{marginTop:"4px"}}>
                     <button className="btn--green" ><a className="btn--text" href={this.state.connectStr}>Lets' go &rarr;</a></button>
                                                        
                     </div>

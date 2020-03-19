@@ -7,10 +7,18 @@ export default class List extends Component {
     constructor(props) {
         super(props)
         console.log('Props in list const is %o', props)
+        var location = "", 
+            startDate= "",
+            endDate=""
+        if (Object.prototype.hasOwnProperty.call(props.location, "state") && props.location.state){
+                location = props.location.state.location || ''
+                startDate = props.location.state.startDate || ''
+                endDate = props.location.state.endDate || ''            
+        } 
         this.state = {
-             location:props.location.state.location || '',
-             startDate: props.location.state.startDate || '',
-             endDate: props.location.state.endDate || ''
+            location:location,
+            startDate: startDate,
+            endDate: endDate
 
         }
     }

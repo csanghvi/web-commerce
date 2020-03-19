@@ -1,13 +1,30 @@
 import React, { Component } from 'react'
 import ListingsDetails from "../components/ListingDetails"
 import Header from "../components/Header"
+import { connect } from "react-redux";
+import { signIn, signOut, checkLoginStatus } from "../actions";
 
 
-export default class List extends Component {
+class Details extends Component {
+    constructor(props) {
+        super(props)
+    
+        this.state = {
+             
+        }
+    }
+    componentDidMount(){
+        console.log("In details page %o", this.props.match.params)
+        this.props.checkLoginStatus()
+        .then (()=>{
+            console.log("Checked status")
+        })
+    }
+    
     render() {
         return (
             <div>
-                 <div class="header_other-pages">
+                 <div className="header_other-pages">
                     <Header/>
                  </div>
                 <div className = "ui container">
@@ -17,3 +34,18 @@ export default class List extends Component {
         )
     }
 }
+
+
+
+const mapStateToProps = state => {
+    return {
+      currentUserObj: state.auth.userObj,
+      isSignedIn: state.auth.isSignedIn,
+      loginError: state.auth.loginError 
+    };
+  };
+  
+  export default connect(
+    mapStateToProps,
+    { signIn, signOut, checkLoginStatus }
+  )(Details);

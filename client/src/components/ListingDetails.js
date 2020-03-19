@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import TicketsModal from "./TicketsModal"
 import { connect } from 'react-redux';
-import { signIn, signOut, setRelayUrl } from "../actions";
+import { signIn, signOut, checkLoginStatus, setRelayUrl } from "../actions";
 import { Link, Redirect } from "react-router-dom";
 import data from "../api/db.json"
 import Carousel from "./Carousel"
 import apiClient from "../api/apiClient"
-
+import { Input } from "semantic-ui-react"
+import DatePicker from './DatePicker'
 
 
 class ListingDetails extends Component {
@@ -15,7 +16,10 @@ class ListingDetails extends Component {
     
         this.state = {
              listing:null,
-             readyForEdit:false
+             readyForEdit:false,
+             selectedQuantity:0,
+             amount:0,
+             date:''
         }
     }
 
@@ -44,15 +48,36 @@ class ListingDetails extends Component {
           numImages: rsp.images.length,
           location: rsp.location,
           email: rsp.email,
-          id: rsp._id
+          id: rsp._id,
+          price: rsp.price,
+          maxQty: rsp.maxQty
         }
         this.setState({
             listing:listing
-          })
+            })
+
        })
        .catch(err => {
          console.log("err in getting a listing with id %o", id)
        })
+    }
+
+    handleChangeDate = (event, data) => {
+        console.log("Data value is %o", data.value.toString())
+        let timeStamp = data.value.toString().split(' ').slice(0,4).join(' ')
+        console.log("timestamp value is %o", timeStamp)
+        this.setState({
+          date:timeStamp
+        })
+    }
+
+    handleQuantityChange = (e) => {
+        console.log("Changed qty is %o", e.target.value)
+        let totalAmount = Number(this.state.listing.price)*Number(e.target.value)
+        this.setState({
+            selectedQuantity: e.target.value,
+            amount:totalAmount
+        })
     }
 
     setComeBackUrl = () => {
@@ -64,7 +89,7 @@ class ListingDetails extends Component {
     renderTicketsModal = () => {
         if (this.state.id){
             return (
-                <TicketsModal id={this.state.id} />
+                <TicketsModal id={this.state.id} buyer={this.props.currentUserObj.email}/>
             )
         } else {
             return (<div/>)
@@ -94,13 +119,17 @@ class ListingDetails extends Component {
 
     render() {
         if (this.state.listing){
+            
             var source = this.state.listing.images[0]
             var location = this.state.listing.location
-            var image = this.state.listing.images[0];
-            var image2 = this.state.listing.image2 || "";
+            var image = this.state.listing.images[0]
+            var image2 = this.state.listing.image2 || ""
             var title = this.state.listing.title || ""
             var desc = this.state.listing.details || ""
             var title = this.state.listing.title || ""
+            var creator = this.state.listing.email || ""
+            var price = this.state.listing.price || 0
+            var maxQty = this.state.listing.maxQty || 10
         }
         
         const url =  source || ""
@@ -108,38 +137,40 @@ class ListingDetails extends Component {
         <div>
             {this.renderEditOption()}
             {this.redirectAfterEdit()}
+            
             <div className="ui two column grid">
-                    <div className="column centered"><Carousel source={source} image={image} image2={image2} legend={location}/></div>
-                    <div class="column centered">
-                        <div class="segment"> 
+                    <div className="column"><Carousel source={source} image={image} image2={image2} legend={location}/></div>
+                    <div className="column">
+                        <div className="segment"> 
                             <span className="heading-primary">{title} </span>
                             <span>Event Details: {desc}.</span>
                         </div>
-                        <div class="segment"> 
-                            <span className="heading-tertiary">Event Details: Event organizer</span>
-                        </div>
-                        <div class="segment listing--date"> 
-                            <time className="heading-secondary">
-                                <p className="listing-hero-image--month">MAY</p>
-                                <p className="listing-hero-image--day">10</p>
-                            </time>
-                        </div>
-                        <div className="segment">
-                            <div>
-                                <button class="ui icon button">
-                                    <i class="minus icon"></i>
-                                </button>
-                                <input type="number" min="0" max="10" id="quantity"  style={{width:"30px", color:"black"}}/>
-                                <button class="ui right icon button">
-                                    <i class="plus icon"></i>
-                                </button>
+                        <div className="segment"> 
+                            <div className="listing--date"> 
+                                <p style={{marginTop:"16px"}}>
+                                    <p style={{transform:"lowercase"}}>Event organized by <span style={{color:"black", fontStyle:"italic", padding:"8px"}}>{creator} </span></p>
+                                    <p> Price: <span style={{color:"black", fontStyle:"italic", padding:"8px"}}> {price} </span>$ per person</p>
+                                    <p> Event Date: <span style={{color:"black", fontStyle:"italic", padding:"8px"}}> 10th May </span></p>
+
+                                </p>
                             </div>
+
                         </div>
-                        <div class="segment">
+                        {this.props.isSignedIn &&
+                        <div className="segment">
+                            <div >
+                                <span style={{fontSize:"1.4rem", fontWeight:"900"}}>Enter quantity: </span>
+                                <Input type="number" min="0" max={maxQty} id="quantity"  value={this.state.selectedQuantity}  onChange={this.handleQuantityChange} style={{width:"50px", color:"black",marginLeft:"8px"}}/>
+                                <span style={{fontSize:"1.4rem", fontWeight:"900", marginLeft:"16px"}}>Select Date: </span>
+                                <DatePicker handleChangeDate={this.handleChangeDate} type={"basic"}/>
+                                <p style={{fontSize:"1.4rem", fontWeight:"900", marginTop:"16px"}} disabled={!(this.state.amount>0)}>Total cost: <span style={{color:"blueviolet", padding:"16px"}}>${this.state.amount}</span></p>
+                            </div>
+                        </div>}
+                        <div className="segment">
                             {this.props.isSignedIn ? this.props.id ?
-                             <TicketsModal id={this.props.id.id} /> : null
+                             <TicketsModal id={this.props.id.id} selectedQuantity={this.state.selectedQuantity} totalAmount={this.state.amount} selectedDate={this.state.date}/> : null
                              :
-                            <button className="btn btn-full" onClick={this.setComeBackUrl}><Link to = '/login'>Login to buy tickets</Link></button> }
+                            <button className="btn btn-half" onClick={this.setComeBackUrl}><Link to = '/login' style={{color:"black"}}>Login to buy tickets</Link></button> }
                         </div>
                     </div>
             </div>
@@ -162,5 +193,5 @@ const mapStateToProps = state => {
   
   export default connect(
     mapStateToProps,
-    { signIn, signOut, setRelayUrl }
+    { signIn, signOut, checkLoginStatus, setRelayUrl }
   )(ListingDetails);

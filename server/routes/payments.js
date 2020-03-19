@@ -23,21 +23,29 @@ module.exports = app => {
           const listingObj = await Listings.findOne({
             _id: data.listingId
           });
-          console.log("Listing Obj is %o" ,listingObj)
+          console.log("Listing Obj is %o", listingObj)
+
+          const sellerObj = await Users.findOne({email: listingObj.email})
 
           if (listingObj) {
-            var amount = listingObj.price * data.listingQty;
-            console.log("Amount is %o" ,amount)
             /*
             Creat Payment Intent
             */
             const paymentIntent = await stripe.paymentIntents.create({
-              amount: 1099,
+              amount: Number(data.amount*100),
               currency: "usd",
               customer: data.stripeCustomerId,
+              application_fee_amount: Number(data.amount*100*0.05),
+              transfer_data: {
+                destination: sellerObj.stripeAccountId,
+              },
               // Verify your integration in this guide by including this parameter
               metadata: {
-                listingId: listingObj.id
+                listingId: listingObj.id,
+                listingTitle: listingObj.title,
+                qty: data.listingQty,
+                userEmail: user.email,
+                selectedDate: data.selectedDate
               }
             });
 
@@ -64,19 +72,37 @@ module.exports = app => {
     console.log("Received request to create session %o", data);
     const amount = data.amount * 100;
     try {
+      var userObj = await Users.findOne({ email: data.email }) 
+      var listingObj = await Listings.findOne({ _id: data.id })   
+      var sellerObj = await Users.findOne({email: listingObj.email})
+      console.log("ListingObj details are %o %o, %o, %o %o", listingObj.id, listingObj.title, userObj._id, data.quantity, listingObj.images[0])
+
       const session = await stripe.checkout.sessions.create({
         success_url: `${process.env.STRIPE_CHECKOUT_DOMAIN}/checkout?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${process.env.STRIPE_CHECKOUT_DOMAIN}/listings/${data.listingId}`,
+        cancel_url: `${process.env.STRIPE_CHECKOUT_DOMAIN}/listings/${data.id}`,
         payment_method_types: ["card"],
+        customer: userObj.stripeCustomerId,
+        payment_intent_data: {
+          application_fee_amount: Number(data.amount*100*0.05),
+          transfer_data: {
+            destination: sellerObj.stripeAccountId,
+          },
+          metadata: {
+            listingId: listingObj.id,
+            listingTitle: listingObj.title,
+            qty: data.quantity,
+            userEmail: userObj.email,
+            selectedDate: data.selectedDate
+          }
+        },
         line_items: [
           {
-            name: "Listing Name",
-            amount: 1000,
+            name: listingObj.title,
+            description: listingObj.title,
+            amount: Number(data.amount*100),
             currency: "usd",
             quantity: data.quantity,
-            images: [
-              "https://images.pexels.com/photos/2283996/pexels-photo-2283996.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
-            ]
+            images: [listingObj.images[0]]
           }
         ]
       });

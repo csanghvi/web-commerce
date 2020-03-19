@@ -10,7 +10,7 @@ class EditListing extends Component {
     render() {
         return (
             <div>
-                 <div class="header_other-pages">
+                 <div className="header_other-pages">
                     <Header/>
                  </div>
                 <div className = "ui container">

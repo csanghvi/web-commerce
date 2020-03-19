@@ -15,16 +15,39 @@ code {
 }
 
 html {
-  font-size: 62.5%; 
+  font-size: 75.5%; 
 }
 
 a {
-  color: black;
+  color: white;
 }
 a:hover {
-  color: blue;
+  color: black;
 }
 
+
+
+button[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+button[disabled]:hover{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+
+
+.stripe-dashboard {
+  color: green;
+}
+
+.stripe-dashboard:hover {
+  color: green;
+  text-decoration: underline;
+
+}
 
 
 .navigation_list {
@@ -40,11 +63,18 @@ a:hover {
 .navigation_title {
   list-style: none;
   margin-top: 10px;
-  color: black;  
-  font-size: 2.0rem;
-  text-transform: uppercase;
-  font-weight: 700;
+  border-radius: 50%;
   float: left;
+
+}
+
+.logo {
+  list-style: none;
+  margin-top: 10px;
+  border-radius: 50%;
+  float: left;
+  height: 25%;
+  width: 25%;
 
 }
 
@@ -73,7 +103,7 @@ a:hover {
   padding: 5rem;
 }
 
-.header {
+.header_primary {
   height: 100vh;
   background-image: linear-gradient(to bottom, rgba(121, 5, 253, 0.9), rgb(252, 252, 252)), url(img/nat-7.jpg);
   background-size: cover;
@@ -363,11 +393,12 @@ a:hover {
     margin-top: 16px;
     box-sizing: border-box;
     text-align:center;
+    color: black;
   }
   .btn-half:hover {
     background: #0055ff;
     border: 2px solid #0055ff;
-    color: #fff;
+    color: white;
   }
 
 
@@ -378,7 +409,7 @@ a:hover {
 
   .btn--green {
     border: none;
-    background-color: blueviolet;
+    background-color: #8a2be2;
     border-radius: 10px;
     padding: 15px 32px;
     text-align: center;
@@ -541,10 +572,13 @@ a:hover {
   margin-top: 10px;
   font-size: 2.0rem;
   font-weight: 700;
-  color: black;
+  color: white;
   float: right;
   position: absolute;
   z-index: 2;
+}
+.user-options:hover {
+  color: black;
 }
 
 .user-options-dd {

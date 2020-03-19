@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Form } from "semantic-ui-react"
 import {
   CardElement,
   Elements,
@@ -43,6 +44,8 @@ const CheckoutForm = (props) => {
   const [saveCard, setSaveCard] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [clientSecret, setClientSecret] = useState(null);
+  const [existingCard, setExistingCard] = useState(null);
+  const [paymentOption, setPaymentOption] = useState(null);
 
 
 
@@ -51,11 +54,18 @@ const CheckoutForm = (props) => {
 
   useEffect(() => {
     // Update the document title using the browser API
-    apiClient.createPaymentIntent({stripeCustomerId: props.currentUserObj.stripeCustomerId,listingId: props.id, quantity:10})
+    apiClient.createPaymentIntent({stripeCustomerId: props.currentUserObj.stripeCustomerId,listingId: props.id, quantity:props.quantity, amount:props.totalAmount, selectedDate:props.selectedDate})
     .then (res => {
       console.log("Res of createPaymentIntent %o",res);
       setClientSecret(res.data.clientSecret);
       console.log("props.clientSecret is %o", props.clientSecret)
+      apiClient.fetchCustomerPaymentMethods(props.currentUserObj.stripeCustomerId)
+      .then(card => {
+        if (card) {
+          console.log("Setting cards")
+          setExistingCard(card)
+        }
+      })
 
     })
     
@@ -123,14 +133,14 @@ const renderLegalText = () => {
   if (saveCard) {
   return (
       <div className="sr-legal-text">
-          Your card will be charge $14.00<span id="save-card-text"> and your card details will be saved to your account</span>.
+          Your card will be charge ${props.totalAmount}.00<span id="save-card-text"> and your card details will be saved to your account</span>.
       </div>
   )
   } else {
     return (
 
       <div className="sr-legal-text">
-        Your card will be charge $14.00.
+        Your card will be charge ${props.totalAmount}.00.
     </div>
 
     )
@@ -148,33 +158,66 @@ const renderSubmitOrSpinner = () => {
   }
 
 }
+const handlePaymentOption = (e) => {
+  console.log("Value of radio button clicked is %o", e.target.value)
+  setPaymentOption(e.target.value)
+}
+
+const displayPaymentOptions = () =>{
+  const existingLabel = `Use card ending with ${existingCard.last4}`
+    return (
+      <div>
+      <Form.Group inline>
+          <label>How would you like to pay?</label>
+          <Form.Radio label={existingLabel} checked={paymentOption === 'existing'} value="existing" onClick={() => setPaymentOption('existing')} />
+          <Form.Radio label="Use a new card" checked={paymentOption === 'new'} value="new" onClick={() => setPaymentOption('new')} />
+      </Form.Group>
+    </div>
+    )
+}
+
+const displayCardForm = () => {
   return (
-    <form onSubmit={handleSubmit}>
-      <div class="form-row">
-        <label>
-          Credit or debit card
-        </label>
-        <div className="sr-combo-inputs-row">
+    <div>
+      <div>
+        <div className="sr-combo-inputs-row" style={{borderStyle:"outset"}}>
         <CardElement
           id="card-element"
           options={CARD_ELEMENT_OPTIONS}
           onChange={handleChange}
         />
         </div>
-        <div className="card-errors" role="alert">{error}</div>
+        <div className="card-errors" role="alert" style={{color:"red"}}>{error}</div>
       </div>
-      <div class="sr-form-row">
-              <label class="sr-checkbox-label"><input type="checkbox" id="save-card" onClick={handleSaveCard}/><span class="sr-checkbox-check"></span> Save card for future payments</label>
+      <div className="sr-form-row">
+          <label className="sr-checkbox-label"><input type="checkbox" id="save-card" onClick={handleSaveCard}/> Save card for future payments</label>
       </div>
-      <button className="fill-card hidden">
-          <i></i>
-          <span>Use test card</span>
-      </button>
-      {renderLegalText()}
+    </div>
+  )
+}
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="form-row">
+        {existingCard ? 
+        <React.Fragment>
+        {displayPaymentOptions()}
+        { (paymentOption === "new") &&
+                <React.Fragment>
+                {displayCardForm()}
+              </React.Fragment>
+        }
+        </React.Fragment> 
+        :
+        <React.Fragment>
+          {displayCardForm()}
+        </React.Fragment> 
+        }
+      </div>
+      <div className="card-errors" role="alert">{status}</div>
+        {renderLegalText()}
       <div className="submit-card-button">
         {renderSubmitOrSpinner()}
       </div>
-      <div className="card-errors" role="alert">{status}</div>
     </form>
   );
 }

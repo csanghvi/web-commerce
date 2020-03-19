@@ -8,11 +8,13 @@ import List from './pages/List';
 import Details from './pages/Details'
 import history from "./History";
 import Profile from "./pages/Profile";
+import Plans from "./pages/Plans";
 import NewListing from "./pages/NewListing"
 import UserOptions from "./components/UserOptions"
 import Checkout from './pages/Checkout';
 import EditListing from './pages/EditListing';
 import OauthConnect from './pages/OauthConnect';
+import Settings from './pages/Settings';
 
 
 class App extends Component {
@@ -34,11 +36,13 @@ class App extends Component {
                 <Route path="/" exact component={Home} />
                 <Route path="/register" exact component={Register} />
                 <Route path="/login" exact component={Login} />
+                <Route path="/settings"  component={Settings} />
                 <Route path="/listings/new" exact component={NewListing} />
                 <Route path="/listings" exact component={List} />
                 <Route path="/listings/edit/:id" exact component={EditListing} />
                 <Route path="/listings/:id" component={Details} />
                 <Route path="/profile" component={Profile} />
+                <Route path="/plans" component={Plans} />
                 <Route path="/checkout" component={Checkout} />
                 <Route path="/oauth/connect" component={OauthConnect} />
               </Switch>

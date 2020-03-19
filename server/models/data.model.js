@@ -22,6 +22,9 @@ const Listings = new Schema(
     creator: {
       type: String
     },
+    email: {
+      type: String
+    },
     dateCreated: {
       type: Date
     },
@@ -113,6 +116,9 @@ Users.methods.comparePassword = function(givenPassword, cb) {
 
 const Orders = new Schema(
   {
+    email: {
+      type: String
+    },
     listingId: {
       type: String
     },
@@ -125,17 +131,20 @@ const Orders = new Schema(
     stripeCustomerId: {
       type: String
     },
-    email: {
+    stripeBuyer: {
       type: String
-    },
-    dateCreated: {
-      type: Date
     },
     amount: {
       type: Number
     },
     qty: {
       type: Number
+    },
+    stripeSeller: {
+      type: String
+    },
+    selectedDate: {
+      type: String
     }
   },
   { strict: false }

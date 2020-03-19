@@ -40,3 +40,15 @@ export const accountSignIn = (userObj) => async (dispatch, getState) => {
     dispatch({ type: SIGN_IN_FAILURE, payload: err });
   }
 };
+
+
+export const checkLoginStatus = () => async (dispatch, getState) => {
+  try {
+    const response = await apiClient.checkLogin();
+    dispatch({ type: SIGN_IN, payload: response.data.user });
+    return true
+  } catch (err) {
+    console.log("IN action creator %o", err);
+    dispatch({ type: SIGN_IN_FAILURE, payload: err });
+  }
+};

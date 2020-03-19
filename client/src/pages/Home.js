@@ -5,8 +5,8 @@ import Search from "../components/Search"
 export default class Home extends Component {
     render() {
         return (
-            <div class="header">
-                <Header/>
+            <div className="header_primary">
+                <Header hideSearch={true}/>
                 <div class="signin_container">
                         <Search />
                 </div>

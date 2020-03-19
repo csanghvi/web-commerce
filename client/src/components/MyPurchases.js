@@ -4,50 +4,74 @@ import {
     Segment,
     Icon
   } from "semantic-ui-react";
+import { connect } from "react-redux";
+import { signIn, signOut } from "../actions";
+import apiClient from "../api/apiClient"
 
 
 
-export default class MyPurchases extends Component {
 
+
+class MyPurchases extends Component {
+  constructor(props) {
+    super(props)
+  
+    this.state = {
+       orders:[]
+    }
+  }
+
+  componentDidMount(){
+    console.log("Fetch user orders")
+    apiClient.fetchUserOrders(this.props.currentUserObj.email)
+    .then(rsp => {
+      console.log("Rsp is %o", rsp)
+      this.setState({
+        orders:rsp
+      })
+    })
+  }
+  
     getPurchases = () => {
-        return (
-          <React.Fragment key={1}>
-          <Table.Row key={1}>
-            <Table.Cell width="4">{"Test"}</Table.Cell>
-            <Table.Cell width="5">
-              <Icon
-                name="angle right"
-                id={"123"}
-                onClick={this.selectOrder}
-              />
-            </Table.Cell>
-            <Table.Cell width="3"/>
-            <Table.Cell textAlign='right' width="4">
-                      <Icon
-                        floating="true"
-                        button="true"
-                        name="setting"
-                        id={"123"}
-                        onClick={this.selectOrderAction}
-                      />
-            </Table.Cell>
-    
-          </Table.Row>
-        </React.Fragment>
-        );
+      var list = this.state.orders
+      if (list) {
+        var listItems = list.map((l) => (
+            <React.Fragment key={l._id}>
+            <Table.Row key={l._id}>
+              <Table.Cell width="5">{l.listingTitle}</Table.Cell>
+              <Table.Cell width="4">{l.selectedDate}</Table.Cell>
+              <Table.Cell width="2"> {l.qty}
+              </Table.Cell>
+              <Table.Cell textAlign='right' width="3"> {Number(l.amount/100)}.00$</Table.Cell>
+              <Table.Cell textAlign='right' width="2">
+                        <Icon
+                          floating="true"
+                          button="true"
+                          name="setting"
+                          id={"123"}
+                          onClick={this.selectOrderAction}
+                        />
+              </Table.Cell>
+      
+            </Table.Row>
+          </React.Fragment>
+         ));
+      } 
+        return listItems
       };
 
     render() {
         return (
-            <div className="ui container">
+            <div className="ui container" style={{fontSize:"3rem"}}>
             <Segment>
               <Table striped color="red" key="red">
                 <Table.Header>
                   <Table.Row>
-                    <Table.HeaderCell width="4">Order</Table.HeaderCell>
-                    <Table.HeaderCell width="5" />
-                    <Table.HeaderCell textAlign='right' width="3">Updated</Table.HeaderCell>
-                    <Table.HeaderCell textAlign='right' width="4">Actions</Table.HeaderCell>
+                    <Table.HeaderCell width="5">Title</Table.HeaderCell>
+                    <Table.HeaderCell width="4">Event Date</Table.HeaderCell>
+                    <Table.HeaderCell width="2"> Quantity </Table.HeaderCell>
+                    <Table.HeaderCell textAlign='right' width="3">Amount</Table.HeaderCell>
+                    <Table.HeaderCell textAlign='right' width="2">Actions</Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>{this.getPurchases()}</Table.Body>
@@ -57,3 +81,18 @@ export default class MyPurchases extends Component {
         )
     }
 }
+
+
+
+const mapStateToProps = state => {
+  return {
+    currentUserObj: state.auth.userObj,
+    isSignedIn: state.auth.isSignedIn,
+    loginError: state.auth.loginError 
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  { signIn, signOut }
+)(MyPurchases);

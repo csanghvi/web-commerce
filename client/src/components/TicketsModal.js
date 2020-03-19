@@ -71,7 +71,7 @@ class TicketsModal extends React.Component {
     /* Fetches information from the server to set up the page */
     try {
       console.log("Props id is %o", this.props.id)
-    var rawResponse = await apiClient.createCheckoutSession(this.props.id, 50, 5)
+    var rawResponse = await apiClient.createCheckoutSession(this.props.id, this.props.totalAmount, this.props.selectedQuantity, this.props.selectedDate)
       console.log("Resulting session id is %o", rawResponse.data.sessionId)
     } catch (err){
       console.log("Err in creating a checkout session %o", err)
@@ -94,17 +94,35 @@ class TicketsModal extends React.Component {
 
   render() {
     const clientSecret = this.state.clientSecret
-    const paymentResult = this.state.paymentResult
+    var paymentResult = this.state.paymentResult
+    var successStyle
+    if (paymentResult === "succeeded"){
+      paymentResult = `Payment successfully completed. Your ticket will be emailed to you at ${this.props.buyer}`
+      successStyle = {
+        color:"green",
+        fontSize:"1.4rem",
+        fontWeight:"700"
+      }
+    } else if (paymentResult === "failed"){
+      paymentResult = `Payment attempt failed.`
+      successStyle = {
+        color:"red",
+        fontSize:"1.4rem",
+        fontWeight:"700"
+      }
+    }
     console.log ('Client secret is %o', clientSecret)
     return (
       <div>
       { paymentResult ? 
       <React.Fragment>
-        {paymentResult}
+        <span style={successStyle}>
+          {paymentResult}
+        </span>
       </React.Fragment>
        : 
       <React.Fragment>
-          <button onClick={this.openModal} className="btn btn-half">Pay with cards</button>
+          <button onClick={this.openModal} className="btn btn-half" disabled={!(this.props.selectedQuantity > 0)}>Pay with cards</button>
           
           <Modal
             appElement={document.querySelector('#app')}
@@ -116,11 +134,11 @@ class TicketsModal extends React.Component {
           >
             {this.state.isOpen &&
               <Elements stripe={stripePromise}>
-                <Checkout id={this.props.id} paymentResult={this.paymentResult}/>
+                <Checkout id={this.props.id} paymentResult={this.paymentResult} totalAmount={this.props.totalAmount} quantity={this.props.selectedQuantity} selectedDate={this.props.selectedDate}/>
               </Elements>
             }
           </Modal>
-          <button onClick={this.initiateCheckout} className="btn btn-half">Use stripe checkout</button>
+          <button onClick={this.initiateCheckout} className="btn btn-half" disabled={!(this.props.selectedQuantity > 0)}>Use stripe checkout</button>
         </React.Fragment> 
         }
       </div>

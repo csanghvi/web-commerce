@@ -1,0 +1,144 @@
+import React, { Component } from 'react'
+import { Redirect } from "react-router-dom";
+import { connect } from "react-redux";
+import { signIn, signOut } from "../actions";
+import apiClient  from "../api/apiClient"
+
+
+class ModifySettings extends Component {
+    constructor(props) {
+        super(props);
+    
+        this.state = {
+          firstName: '',
+          lastName: '',
+          email: '',
+          loginLink: '',
+          error: '',
+        };
+    
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+  
+      }
+    
+      handleChange(event) {
+        const target = event.target;
+        const name = target.name;
+        const value = target.value;
+    
+        this.setState({
+          [name]: value,
+        });
+      }
+
+
+    
+      async handleSubmit(event) {
+        event.preventDefault();
+        try {
+          let res = await apiClient.updateAccount(this.state);
+          console.log(res);
+          
+          this.props.signIn(this.state.email, this.state.password);
+        } catch (err) {
+          console.log('Signup failed.', err);
+        }
+      }
+
+
+      componentDidMount() {
+          console.log("Generate a stripe dashboard link %o",this.props.currentUserObj )
+          apiClient.createLoginLink(
+            this.props.currentUserObj.stripeAccountId
+          )
+          .then(loginLink => {
+            console.log("Login link received is %o", loginLink)
+            this.setState({
+                firstName: this.props.currentUserObj.firstName,
+                lastName: this.props.currentUserObj.lastName,
+                email: this.props.currentUserObj.email,
+                loginLink: `${loginLink.data.url}#/account`,
+                error: ''
+            })
+          })
+          
+        .catch(err => {
+            console.log("Error with stripe is %o", err)
+          });
+
+      }
+    
+      render() {
+        return (
+            <div className="signup-form">
+              <div>
+                  <h2 class="heading-secondary">
+                      Update your account
+                  </h2>
+              </div>
+              <form onSubmit={this.handleSubmit}>
+                <input
+                  className="new-section name form__input"
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  placeholder="First name"
+                  value={this.state.firstName}
+                  onChange={this.handleChange}
+                  required
+                />
+    
+                <input
+                  className="name form__input"
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  placeholder="Last name"
+                  value={this.state.lastName}
+                  onChange={this.handleChange}
+                  required
+                />
+    
+                <input
+                  className="email form__input"
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Email"
+                  value={this.state.email}
+                  onChange={this.handleChange}
+                  required
+                />
+    
+                <h2
+                  className="form__input"
+                ><a className="stripe-dashboard" href={this.state.loginLink}>View Stripe account</a>
+                </h2>
+    
+                <button type="submit" className="btn btn-primary btn-full">
+                  Update account
+                </button>
+    
+                <p className={`error ${this.state.error && 'show'}`}>
+                  {this.state.error && `Error: ${this.state.error}`}
+                </p>
+              </form>
+            </div>
+          );
+      }
+  }
+  
+  const mapStateToProps = state => {
+    return {
+      currentUserObj: state.auth.userObj,
+      isSignedIn: state.auth.isSignedIn,
+      loginError: state.auth.loginError 
+    };
+  };
+  
+  export default connect(
+    mapStateToProps,
+    { signIn, signOut }
+  )(ModifySettings);
+  

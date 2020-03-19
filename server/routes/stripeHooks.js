@@ -1,6 +1,6 @@
 const express = require('express');
 const hooksRoutes = express.Router();
-const [ , Users] = require('../models/data.model');
+const [ Listings, Users, Orders] = require('../models/data.model');
 const stripe = require('../utils/stripeConfig')
 
 
@@ -9,7 +9,7 @@ const stripe = require('../utils/stripeConfig')
 // https://dashboard.stripe.com/test/webhooks
 
 module.exports = (app) => {
-    app.use('/api/v1/hooks', hooksRoutes);
+    app.use('/api/hooks', hooksRoutes);
 
     hooksRoutes.post("", async (req, res) => {
         console.log('Received a hook')
@@ -58,7 +58,26 @@ module.exports = (app) => {
             // Funds have been captured
             // Fulfill any orders, e-mail receipts, etc
             // To cancel the payment after capture you will need to issue a Refund (https://stripe.com/docs/api/refunds)
-            console.log("💰 Payment captured!");
+            console.log("💰 Payment captured! %o", data.object);
+            
+
+            
+           let order = {
+            listingId: data.object.metadata.listingId,
+            listingTitle: data.object.metadata.listingTitle,
+            stripeBuyer: data.object.stripeCustomer,
+            stripeSeller: data.object.transfer_data.destination,
+            dateOfPurchase: data.object.created,
+            amount: data.object.amount,
+            qty: data.object.metadata.qty,
+            email: data.object.metadata.userEmail,
+            selectedDate: data.object.metadata.selectedDate
+           }
+           let orderObj = new Orders(order);
+           await orderObj.save()
+
+           
+
           } else if (eventType === "payment_intent.payment_failed") {
             console.log("❌ Payment failed.");
           }
