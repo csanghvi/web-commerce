@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Grid, Image, Menu, Segment, Header, Button, Icon} from "semantic-ui-react"
+import {Grid, Image, Menu, Segment, Header, Button, Icon, Table, Checkbox} from "semantic-ui-react"
 
 export default class SubscriptionOptions extends Component {
     constructor(props) {
@@ -28,240 +28,133 @@ export default class SubscriptionOptions extends Component {
                     </Segment>
                     </Grid.Row>
 
-                    <Grid.Row columns={5} centered>
-                    <Grid.Column width={2}>
+                    <Grid.Row columns={3} centered>
+                        <Grid.Column width={4}>
+                        </Grid.Column>
+                        <Grid.Column width={8}>
+                        <Table compact celled definition>
+                            <Table.Header>
+                            <Table.Row>
+                                <Table.HeaderCell />
+                                <Table.HeaderCell>Starter Plan</Table.HeaderCell>
+                                <Table.HeaderCell>Pro Plan</Table.HeaderCell>
+                                <Table.HeaderCell>Enterprise Plan</Table.HeaderCell>
+                                <Table.HeaderCell>Premium Plan</Table.HeaderCell>
+                            </Table.Row>
+                            </Table.Header>
+
+                            <Table.Body>
+                            <Table.Row>
+                                <Table.Cell collapsing>
+                                Fee per paid ticket*
+                                </Table.Cell>
+                                <Table.Cell>4%</Table.Cell>
+                                <Table.Cell>3%</Table.Cell>
+                                <Table.Cell>2.5%</Table.Cell>
+                                <Table.Cell>Custom</Table.Cell>
+                            </Table.Row>
+                            <Table.Row>
+                                <Table.Cell collapsing>
+                                Customer support
+                                </Table.Cell>
+                                <Table.Cell>Online help center</Table.Cell>
+                                <Table.Cell>Online help center</Table.Cell>
+                                <Table.Cell>Phone, chat, email for paid events</Table.Cell>
+                                <Table.Cell>24/7 support</Table.Cell>
+                            </Table.Row>
+                            <Table.Row>
+                                <Table.Cell collapsing>
+                                Ticketing & Registration 
+                                </Table.Cell>
+                                <Table.Cell><Icon name="check" color="green"/></Table.Cell>
+                                <Table.Cell><Icon name="check" color="green"/></Table.Cell>
+                                <Table.Cell><Icon name="check" color="green"/></Table.Cell>
+                                <Table.Cell><Icon name="check" color="green"/></Table.Cell>
+                            </Table.Row>
+                            <Table.Row>
+                                <Table.Cell collapsing>
+                                Onsite support
+                                </Table.Cell>
+                                <Table.Cell><Icon name="stop circle" color="red"/></Table.Cell>
+                                <Table.Cell><Icon name="stop circle" color="red"/></Table.Cell>
+                                <Table.Cell><Icon name="check" color="green"/></Table.Cell>
+                                <Table.Cell><Icon name="check" color="green"/></Table.Cell>
+                            </Table.Row>
+                            <Table.Row>
+                                <Table.Cell collapsing>
+                                Social media marketing
+                                </Table.Cell>
+                                <Table.Cell><Icon name="stop circle" color="red"/></Table.Cell>
+                                <Table.Cell><Icon name="stop circle" color="red"/></Table.Cell>
+                                <Table.Cell><Icon name="check" color="green"/></Table.Cell>
+                                <Table.Cell><Icon name="check" color="green"/></Table.Cell>
+                            </Table.Row>
+                            <Table.Row>
+                                <Table.Cell collapsing>
+                                Customer Success
+                                </Table.Cell>
+                                <Table.Cell><Icon name="stop circle" color="red"/></Table.Cell>
+                                <Table.Cell><Icon name="stop circle" color="red"/></Table.Cell>
+                                <Table.Cell><Icon name="stop circle" color="red"/></Table.Cell>
+                                <Table.Cell><Icon name="check" color="green"/></Table.Cell>
+                            </Table.Row>
+                            </Table.Body>
+
+                            <Table.Footer fullWidth>
+                            <Table.Row>
+                                <Table.HeaderCell />
+                                <Table.HeaderCell>
+                                <Button
+                                    floated='right'
+                                    icon
+                                    labelPosition='left'
+                                    primary
+                                    size='small'
+                                >
+                                    Subscribe
+                                </Button>
+                                </Table.HeaderCell>
+                                <Table.HeaderCell>                                
+                                    <Button
+                                    floated='right'
+                                    icon
+                                    labelPosition='left'
+                                    primary
+                                    size='small'
+                                      >
+                                    Subscribe
+                                </Button>
+                                </Table.HeaderCell>
+                                <Table.HeaderCell>                                
+                                    <Button
+                                    floated='right'
+                                    icon
+                                    labelPosition='left'
+                                    primary
+                                    size='small'
+                                      >
+                                    Subscribe
+                                </Button>
+                                </Table.HeaderCell>
+                                <Table.HeaderCell>                                
+                                    <Button
+                                    floated='right'
+                                    icon
+                                    labelPosition='left'
+                                    primary
+                                    size='small'
+                                      >
+                                    Subscribe
+                                </Button>
+                                </Table.HeaderCell>
+                            
+
+                            </Table.Row>
+                            </Table.Footer>
+                        </Table>
+
                     </Grid.Column>
                     <Grid.Column width={4}>
-                    <Menu vertical>
-                        <Menu.Item color={"red"}>
-                            <Menu.Header>Products</Menu.Header>
-                        </Menu.Item>
-
-                        <Menu.Item>
-                        <Menu.Header>CMS Solutions</Menu.Header>
-
-                        <Menu.Menu>
-                            <Menu.Item
-                            name='rails'
-                            active={activeItem === 'rails'}
-                            onClick={this.handleItemClick}
-                            />
-                            <Menu.Item
-                            name='python'
-                            active={activeItem === 'python'}
-                            onClick={this.handleItemClick}
-                            />
-                            <Menu.Item
-                            name='php'
-                            active={activeItem === 'php'}
-                            onClick={this.handleItemClick}
-                            />
-                        </Menu.Menu>
-                        </Menu.Item>
-
-                        <Menu.Item>
-                        <Menu.Header>Hosting</Menu.Header>
-
-                        <Menu.Menu>
-                            <Menu.Item
-                            name='shared'
-                            active={activeItem === 'shared'}
-                            onClick={this.handleItemClick}
-                            />
-                            <Menu.Item
-                            name='dedicated'
-                            active={activeItem === 'dedicated'}
-                            onClick={this.handleItemClick}
-                            />
-                        </Menu.Menu>
-                        </Menu.Item>
-
-                        <Menu.Item>
-                        <Menu.Header>Support</Menu.Header>
-
-                        <Menu.Menu>
-                            <Menu.Item
-                            name='email'
-                            active={activeItem === 'email'}
-                            onClick={this.handleItemClick}
-                            >
-                            E-mail Support
-                            </Menu.Item>
-
-                            <Menu.Item
-                            name='faq'
-                            active={activeItem === 'faq'}
-                            onClick={this.handleItemClick}
-                            >
-                            FAQs
-                            </Menu.Item>
-                        </Menu.Menu>
-                        </Menu.Item>
-                    </Menu>                    
-                    </Grid.Column>
-                    <Grid.Column width={4}>
-                    <Menu vertical>
-                        <Menu.Item>
-                        <Menu.Header>Products</Menu.Header>
-
-                        <Menu.Menu>
-                            <Menu.Item
-                            name='enterprise'
-                            active={activeItem === 'enterprise'}
-                            onClick={this.handleItemClick}
-                            />
-                            <Menu.Item
-                            name='consumer'
-                            active={activeItem === 'consumer'}
-                            onClick={this.handleItemClick}
-                            />
-                        </Menu.Menu>
-                        </Menu.Item>
-
-                        <Menu.Item>
-                        <Menu.Header>CMS Solutions</Menu.Header>
-
-                        <Menu.Menu>
-                            <Menu.Item
-                            name='rails'
-                            active={activeItem === 'rails'}
-                            onClick={this.handleItemClick}
-                            />
-                            <Menu.Item
-                            name='python'
-                            active={activeItem === 'python'}
-                            onClick={this.handleItemClick}
-                            />
-                            <Menu.Item
-                            name='php'
-                            active={activeItem === 'php'}
-                            onClick={this.handleItemClick}
-                            />
-                        </Menu.Menu>
-                        </Menu.Item>
-
-                        <Menu.Item>
-                        <Menu.Header>Hosting</Menu.Header>
-
-                        <Menu.Menu>
-                            <Menu.Item
-                            name='shared'
-                            active={activeItem === 'shared'}
-                            onClick={this.handleItemClick}
-                            />
-                            <Menu.Item
-                            name='dedicated'
-                            active={activeItem === 'dedicated'}
-                            onClick={this.handleItemClick}
-                            />
-                        </Menu.Menu>
-                        </Menu.Item>
-
-                        <Menu.Item>
-                        <Menu.Header>Support</Menu.Header>
-
-                        <Menu.Menu>
-                            <Menu.Item
-                            name='email'
-                            active={activeItem === 'email'}
-                            onClick={this.handleItemClick}
-                            >
-                            E-mail Support
-                            </Menu.Item>
-
-                            <Menu.Item
-                            name='faq'
-                            active={activeItem === 'faq'}
-                            onClick={this.handleItemClick}
-                            >
-                            FAQs
-                            </Menu.Item>
-                        </Menu.Menu>
-                        </Menu.Item>
-                    </Menu> 
-                    </Grid.Column>
-                    <Grid.Column width= {4}>
-                    <Menu vertical>
-                        <Menu.Item>
-                        <Menu.Header>Products</Menu.Header>
-
-                        <Menu.Menu>
-                            <Menu.Item
-                            name='enterprise'
-                            active={activeItem === 'enterprise'}
-                            onClick={this.handleItemClick}
-                            />
-                            <Menu.Item
-                            name='consumer'
-                            active={activeItem === 'consumer'}
-                            onClick={this.handleItemClick}
-                            />
-                        </Menu.Menu>
-                        </Menu.Item>
-
-                        <Menu.Item>
-                        <Menu.Header>CMS Solutions</Menu.Header>
-
-                        <Menu.Menu>
-                            <Menu.Item
-                            name='rails'
-                            active={activeItem === 'rails'}
-                            onClick={this.handleItemClick}
-                            />
-                            <Menu.Item
-                            name='python'
-                            active={activeItem === 'python'}
-                            onClick={this.handleItemClick}
-                            />
-                            <Menu.Item
-                            name='php'
-                            active={activeItem === 'php'}
-                            onClick={this.handleItemClick}
-                            />
-                        </Menu.Menu>
-                        </Menu.Item>
-
-                        <Menu.Item>
-                        <Menu.Header>Hosting</Menu.Header>
-
-                        <Menu.Menu>
-                            <Menu.Item
-                            name='shared'
-                            active={activeItem === 'shared'}
-                            onClick={this.handleItemClick}
-                            />
-                            <Menu.Item
-                            name='dedicated'
-                            active={activeItem === 'dedicated'}
-                            onClick={this.handleItemClick}
-                            />
-                        </Menu.Menu>
-                        </Menu.Item>
-
-                        <Menu.Item>
-                        <Menu.Header>Support</Menu.Header>
-
-                        <Menu.Menu>
-                            <Menu.Item
-                            name='email'
-                            active={activeItem === 'email'}
-                            onClick={this.handleItemClick}
-                            >
-                            E-mail Support
-                            </Menu.Item>
-
-                            <Menu.Item
-                            name='faq'
-                            active={activeItem === 'faq'}
-                            onClick={this.handleItemClick}
-                            >
-                            FAQs
-                            </Menu.Item>
-                        </Menu.Menu>
-                        </Menu.Item>
-                    </Menu> 
-                    </Grid.Column>
-                    <Grid.Column width={2}>
                     </Grid.Column>
                     </Grid.Row>
                 </Grid>
