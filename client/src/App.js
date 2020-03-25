@@ -15,6 +15,7 @@ import Checkout from './pages/Checkout';
 import EditListing from './pages/EditListing';
 import OauthConnect from './pages/OauthConnect';
 import Settings from './pages/Settings';
+import BankDetails from './pages/BankDetails'
 
 
 class App extends Component {
@@ -37,6 +38,7 @@ class App extends Component {
                 <Route path="/register" exact component={Register} />
                 <Route path="/login" exact component={Login} />
                 <Route path="/settings"  component={Settings} />
+                <Route path="/bank-account"  component={BankDetails} />
                 <Route path="/listings/new" exact component={NewListing} />
                 <Route path="/listings" exact component={List} />
                 <Route path="/listings/edit/:id" exact component={EditListing} />

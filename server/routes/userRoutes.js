@@ -54,7 +54,11 @@ module.exports = (app) => {
               })
               */
 
-             var savedUser = await Users.findOneAndUpdate({_id: user._id}, {$set:{stripeAccountId:stripeAccount.id}}, {new: true, useFindAndModify: false}) 
+             var savedUser = await Users.findOneAndUpdate({_id: user._id}, 
+              {
+               $set:{stripeAccountId:stripeAccount.id}
+              }, 
+              {new: true, useFindAndModify: false}) 
               console.log("After saving user %o", savedUser);
               res.status(200).json({
                 user: savedUser

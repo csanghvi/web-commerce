@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Redirect } from "react-router-dom";
+import { Redirect, Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { signIn, signOut } from "../actions";
 import apiClient  from "../api/apiClient"
@@ -108,6 +108,7 @@ class ModifySettings extends Component {
     
       render() {
         let redirectLink = this.state.isCustom ? this.state.customAccountLink : this.state.loginLink
+        let payoutLink = this.state.isCustom ? '/bank-account': this.state.loginLink
         return (
             <div className="signup-form">
               <div>
@@ -152,6 +153,15 @@ class ModifySettings extends Component {
                 <h2
                   className="form__input"
                 ><a className="stripe-dashboard" href={redirectLink} target="_blank">Update Stripe account</a>
+                </h2>
+                <h2
+                  className="form__input"
+                >
+                  {this.state.isCustom ? 
+                  <Link to = '/bank-account'> Update payout account</Link>
+                  :
+                  <a className="stripe-dashboard" href={this.state.loginLink} target="_blank">Update payout account</a>
+                  }
                 </h2>
     
                 <button type="submit" className="btn btn-primary btn-full">

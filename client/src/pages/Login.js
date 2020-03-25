@@ -6,7 +6,7 @@ export default class Home extends Component {
     render() {
         return (
             <div className="header_primary">
-                <Header hideSearch={true}/>
+                <Header/>
                 <div class="signin_container">
                         <SignIn />
                 </div>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Grid, Image, Segment, Table, Icon, Button, Header, Menu} from "semantic-ui-react"
+import { Grid, Image, Segment, Table, Icon, Button, Header, Menu, Message} from "semantic-ui-react"
+import { Redirect, Link, withRouter } from "react-router-dom";
 import apiClient from '../api/apiClient'
 import { connect } from "react-redux";
 import { signIn, signOut } from "../actions";
@@ -96,12 +97,28 @@ class MyDashboard extends Component {
 
         return chargeItems
     }
+    renderAccountWarning = () => {
+        let accountWarning = <span/>
+        if (!this.props.currentUserObj.stripeAccountPayouts){
+            accountWarning =   
+                                <Message warning>
+                                <h3> You must create bank account to receive payouts! </h3>
+                                     You can set it up
+                                    <Link to = '/bank-account' style={{color:'blue'}}> here</Link>
+                               </Message>
+        }
+        return accountWarning
+    }
     
     render() {
         return (
             <div className="ui container">
                   <Grid divided='vertically' centered columns={2}>
-
+                  <Grid.Row columns={2}>
+                        <Grid.Column>
+                            {this.renderAccountWarning()}
+                         </Grid.Column>
+                    </Grid.Row>
                     <Grid.Row columns={2}>
                         <Grid.Column>
                              <Segment placeholder>

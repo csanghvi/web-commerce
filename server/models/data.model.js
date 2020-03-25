@@ -75,6 +75,18 @@ const Users = new Schema(
     stripeAccountId: {
       type: String
     },
+    stripeAccountRequirements: {
+      type: Object,
+      default: {}
+    },
+    stripeAccountCharges: {
+      type: Boolean,
+      default: false
+    },
+    stripeAccountPayouts: {
+      type: Boolean,
+      default: false
+    },
     userType: {
       type: String,
       enum: ["BUYER", "SELLER"],
