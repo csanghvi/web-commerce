@@ -8,15 +8,18 @@ import apiClient  from "../api/apiClient"
 class ModifySettings extends Component {
     constructor(props) {
         super(props);
-    
+
+      
         this.state = {
-          firstName: '',
-          lastName: '',
-          email: '',
+          firstName: this.props.currentUserObj.firstName || '',
+          lastName: this.props.currentUserObj.lastName || '',
+          email: this.props.currentUserObj.email || '',
           loginLink: '',
           error: '',
+          customAccountLink:'',
+          isCustom: false
         };
-    
+        this.isStripeAccount()
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
   
@@ -33,6 +36,39 @@ class ModifySettings extends Component {
       }
 
 
+      isStripeAccount = () => {
+        if (this.props.isSignedIn){
+          let isStripeAccount = Object.prototype.hasOwnProperty.call(this.props.currentUserObj, "stripeAccountId") ? true : false
+          if (isStripeAccount){
+            apiClient.getStripeAccountStatus(this.props.currentUserObj.stripeAccountId)
+            .then(rsp => {
+              if (rsp.type === 'custom'){
+                apiClient.getCustomAccountLink(this.props.currentUserObj.stripeAccountId, 'custom_account_update')
+                .then(stripeRsp => {
+                  console.log('Url is %o', stripeRsp.url)
+                  this.setState({
+                    isCustom:true,
+                    customAccountLink:stripeRsp.url
+                  })
+                })
+              } else {
+                apiClient.createLoginLink(
+                  this.props.currentUserObj.stripeAccountId
+                )
+                .then(loginLink => {
+                  console.log("Login link received is %o", loginLink)
+                  this.setState({
+                      loginLink: `${loginLink.data.url}#/account`,
+                      error: ''
+                  })
+                })
+              }    
+            })
+          } else {
+            return false
+          }
+        } 
+      }
     
       async handleSubmit(event) {
         event.preventDefault();
@@ -48,6 +84,7 @@ class ModifySettings extends Component {
 
 
       componentDidMount() {
+        /*
           console.log("Generate a stripe dashboard link %o",this.props.currentUserObj )
           apiClient.createLoginLink(
             this.props.currentUserObj.stripeAccountId
@@ -66,10 +103,11 @@ class ModifySettings extends Component {
         .catch(err => {
             console.log("Error with stripe is %o", err)
           });
-
+          */
       }
     
       render() {
+        let redirectLink = this.state.isCustom ? this.state.customAccountLink : this.state.loginLink
         return (
             <div className="signup-form">
               <div>
@@ -113,7 +151,7 @@ class ModifySettings extends Component {
     
                 <h2
                   className="form__input"
-                ><a className="stripe-dashboard" href={this.state.loginLink}>View Stripe account</a>
+                ><a className="stripe-dashboard" href={redirectLink} target="_blank">Update Stripe account</a>
                 </h2>
     
                 <button type="submit" className="btn btn-primary btn-full">

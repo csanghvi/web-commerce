@@ -24,7 +24,7 @@ class Settings extends Component {
     render() {
         return (
             <div className="header_primary">
-                <Header/>
+                <Header hideSearch={true}/>
                 <div class="signin_container">
                     {this.props.isSignedIn ?
                     <React.Fragment>

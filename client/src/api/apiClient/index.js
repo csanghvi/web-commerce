@@ -2,6 +2,7 @@ import API from "../axiosApi";
 const axios = require("axios");
 const stripe = require("stripe")("sk_test_wcPqI47agQt8hXOnZRAqeeen00tGgkDtny");
 const token = "sk_test_wcPqI47agQt8hXOnZRAqeeen00tGgkDtny";
+var querystring = require('querystring');
 
 const apiClient = {
   stripe,
@@ -76,6 +77,36 @@ const apiClient = {
           return;
         });
     });
+  },
+  createCustomConnect: async function(){
+    return new Promise((resolve, reject) => {
+      console.log("Sending this data to custom connect is %o");
+      API.post(`/api/v1/users/custom-connect`)
+        .then(rsp => {
+          resolve(rsp.data);
+          return;
+        })
+        .catch(error => {
+          console.log(error);
+          reject(error.message);
+          return;
+        });
+    });    
+  },
+  createSubscription: async function(params){
+    return new Promise((resolve, reject) => {
+      console.log("Sending this data to create intent is %o", params);
+      API.post(`/api/v1/payments/create-subscription`, params)
+        .then(rsp => {
+          resolve(rsp.data);
+          return;
+        })
+        .catch(error => {
+          console.log(error);
+          reject(error.message);
+          return;
+        });
+    });    
   },
   createCheckoutSession: async function(listingId, amount, quantity, selectedDate) {
     return new Promise((resolve, reject) => {
@@ -172,7 +203,7 @@ const apiClient = {
     return new Promise((resolve, reject) => {
       // asynchronously called
       console.log("Stripe code id is %o & email is %o", code, email);
-      API.post("/api/v1/users/connect", { code, email})
+      API.post("/api/v1/users/express-connect", { code, email})
         .then(rsp => {
           console.log("Saved account Id %o", rsp);
           resolve(rsp);
@@ -271,6 +302,93 @@ const apiClient = {
           console.log("Error received from server is %o", err)
         });
     });
+  },
+  fetchAllPlans: async function() {
+    return new Promise((resolve, reject) => {
+      // asynchronously called
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+       };
+      axios.get(`https://api.stripe.com/v1/plans`, config)
+        .then(rsp => {
+          console.log("Returning response after making stripe call to fetch plans %o", rsp);
+          resolve(rsp.data.data);
+        })
+        .catch(err => {
+          console.log("Error received from server is %o", err)
+        });
+    });
+  },
+  fetchCurrentSubscriptions: async function(stripeCustomerId) {
+    return new Promise((resolve, reject) => {
+      // asynchronously called
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+       };
+      axios.get(`https://api.stripe.com/v1/subscriptions?customer=${stripeCustomerId}&expand[]=data.latest_invoice.payment_intent`, config)
+        .then(rsp => {
+          console.log("Returning response after making stripe call to fetch subscription %o", rsp.data.data);
+          resolve(rsp.data.data);
+        })
+        .catch(err => {
+          console.log("Error received from server is %o", err)
+        });
+    });
+  },
+  cancelSubscription: async function(subId) {
+    return new Promise((resolve, reject) => {
+      // asynchronously called
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+       };
+      axios.delete(`https://api.stripe.com/v1/subscriptions/${subId}`, config)
+        .then(rsp => {
+          console.log("Returning response after canceling subscription %o", rsp.data);
+          resolve(rsp.data);
+        })
+        .catch(err => {
+          console.log("Error received from server is %o", err)
+        });
+    });
+  },
+  getCustomAccountLink: async function(stripeAccountId, type = 'custom_account_verification'){
+    return new Promise((resolve, reject) => {
+      // asynchronously called
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+       };
+       const bodyParameters = {
+        account: stripeAccountId,
+        failure_url:"http://localhost:3000/settings",
+        success_url: "http://localhost:3000/listings/new",
+        type: type
+       };
+       console.log("Sending bodyparams as %o", bodyParameters)
+      axios.post(`https://api.stripe.com/v1/account_links`, querystring.stringify(bodyParameters), config)
+        .then(rsp => {
+          console.log("Returning response after canceling subscription %o", rsp.data);
+          resolve(rsp.data);
+        })
+        .catch(err => {
+          console.log("Error received from server is %o", err)
+        });
+    });    
+  },
+  getStripeAccountStatus: async function(stripeAccountId){
+    return new Promise((resolve, reject) => {
+      // asynchronously called
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+       };
+      axios.get(`https://api.stripe.com/v1/accounts/${stripeAccountId}`, config)
+        .then(rsp => {
+          console.log("Returning response after fetching account obj %o", rsp.data);
+          resolve(rsp.data);
+        })
+        .catch(err => {
+          console.log("Error received from server is %o", err)
+        });
+    });    
   }
 };
 

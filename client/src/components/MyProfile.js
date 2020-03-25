@@ -3,9 +3,11 @@ import MyPurchases from './MyPurchases';
 import MyListings from './MyListings'
 import MyDashboard from './MyDashboard'
 import { Menu} from "semantic-ui-react";
+import { connect } from "react-redux";
+import { signIn, signOut } from "../actions";
 
 
-export default class ContentList extends Component {
+class MyProfile extends Component {
     constructor(props) {
         super(props);
         this.onChangeContentType = this.onChangeContentType.bind(this);
@@ -30,9 +32,12 @@ export default class ContentList extends Component {
               <div>
                 <Menu attached='top' tabular>
                   <Menu.Item className="heading-secondary" name='Buyer Dashboard' value= 'Purchases' active={this.state.contentType === 'Purchases'} onClick={this.onChangeContentType} />
-                  <Menu.Item className="heading-secondary" name='Listings' value='Listings' active={this.state.contentType === 'Listings'} onClick={this.onChangeContentType} />
-                  <Menu.Item className="heading-secondary" name='Seller Dashboard' value='Dashboard' active={this.state.contentType === 'Dashboard'} onClick={this.onChangeContentType} />
-
+                  {Object.prototype.hasOwnProperty.call(this.props.currentUserObj, 'stripeAccountId') && 
+                  <React.Fragment>
+                    <Menu.Item className="heading-secondary" name='Listings' value='Listings' active={this.state.contentType === 'Listings'} onClick={this.onChangeContentType} />
+                    <Menu.Item className="heading-secondary" name='Seller Dashboard' value='Dashboard' active={this.state.contentType === 'Dashboard'} onClick={this.onChangeContentType} />
+                  </React.Fragment>
+                  }
                   {/*
                   <Menu.Item name='Questions' active={this.state.contentType === 'Questions'} onClick={this.onChangeContentType} />
                   <Menu.Item name='Tips' active={this.state.contentType === 'Tips'} onClick={this.onChangeContentType} />
@@ -52,3 +57,17 @@ export default class ContentList extends Component {
         )
     }
 }
+
+
+const mapStateToProps = state => {
+  return {
+    currentUserObj: state.auth.userObj,
+    isSignedIn: state.auth.isSignedIn,
+    loginError: state.auth.loginError 
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  { signIn, signOut }
+)(MyProfile);

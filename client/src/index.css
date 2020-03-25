@@ -82,6 +82,11 @@ button[disabled]:hover{
   padding: 30rem 0;
 }
 
+.subscription_header {
+  height: 50%;
+  width: 50%;
+}
+
 .book {
   background-image: linear-gradient( rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.9) 50%);
   background-size: 100%;
