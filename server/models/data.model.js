@@ -87,11 +87,20 @@ const Users = new Schema(
       type: Boolean,
       default: false
     },
+    payoutBankLast4: {
+      type: String,
+      default: ''
+    },
+    stripeAccountType: {
+      type: String,
+      enum: ["CUSTOM", "EXPRESS"],
+      default: "CUSTOM"
+    },
     userType: {
       type: String,
       enum: ["BUYER", "SELLER"],
       default: "SELLER"
-    }
+    },
   },
   {
     strict: false

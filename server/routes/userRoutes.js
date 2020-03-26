@@ -8,6 +8,52 @@ const stripe = require("../utils/stripeConfig")
 module.exports = (app) => {
     app.use('/api/v1/users', usersRoutes);
 
+    usersRoutes.route("/bank-account").post(async function(req, res) {
+      console.log("Received custom connect BANK ACCOUNT setup Req %o", req.body);
+      Users.findOne(
+        {
+          email: req.body.email
+        },
+        async function(err, user) {
+          try {
+            if (user) {
+              /*
+              var stripeRsp = await axios.post(
+                "https://connect.stripe.com/oauth/token",
+                bodyParameters,
+                config
+              );
+              */
+             
+             var savedUser = await Users.findOneAndUpdate({_id: user._id}, 
+              {
+               $set:{payoutBankLast4:req.body.bank_account.last4}
+              }, 
+              {new: true, useFindAndModify: false}) 
+              console.log("After saving user %o", savedUser);
+
+              var bankAccount = await stripe.accounts.createExternalAccount(
+                savedUser.stripeAccountId,
+                {
+                  external_account: req.body.id,
+                },
+              );
+              res.status(200).json({
+                user: savedUser
+              });
+              
+            } else {
+              res.status(400).send("Failed to update user");
+            }
+          } catch (err) {
+              console.log("Failed with error code %o", err)
+            res.status(400).send("Failed to udpate user");
+          }
+        }
+      );
+    });
+
+
     usersRoutes.route("/custom-connect").post(async function(req, res) {
       console.log("Received custom connect setup Req %o", req.body);
       Users.findOne(

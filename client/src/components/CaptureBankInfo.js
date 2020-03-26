@@ -3,7 +3,34 @@ import apiClient  from "../api/apiClient"
 import cookie from 'js-cookie';
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import { signIn, signOut } from "../actions";
+import { signIn, signOut, accountSignIn } from "../actions";
+import { Dropdown } from 'semantic-ui-react'
+
+
+const accountTypeOptions = [
+    { key: 1, text: 'Individual', value: 'individual' },
+    { key: 2, text: 'Company', value: 'company' }
+  ]
+
+
+ const validateForm = (params) => {
+     var errors = []
+    if ( params.routingNumber ) {
+        errors.push('Please enter routing number')
+    }
+    if ( params.bankAccountNumber ) {
+        errors.push('Please enter bank account number')
+    }
+    if ( params.accountHolderName ) {
+        errors.push('Please enter account holder name')
+    }
+    if ( params.accountHolderType ) {
+        errors.push('Please enter account holder type')
+    }
+
+    return errors;
+
+ } 
 
 class CaptureBankInfo extends Component {
     constructor(props) {
@@ -12,11 +39,14 @@ class CaptureBankInfo extends Component {
       this.state = {
         routingNumber: '',
         bankAccountNumber: '',
+        accountHolderName: '',
+        accountHolderType: '',
         error: '',
       };
   
       this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
+      this.handleDDChange = this.handleDDChange.bind(this);
     }
   
     handleChange(event) {
@@ -28,12 +58,29 @@ class CaptureBankInfo extends Component {
         [name]: value,
       });
     }
+
+    handleDDChange (e, { value }) {
+        console.log('Value is %o', value)
+        this.setState({ 
+            accountHolderType: value 
+        })
+    }
   
     async handleSubmit(event) {
       event.preventDefault();
+      let errors = validateForm(this.state)
+      if (errors.length > 0) {
+        this.setState({
+            errors: errors
+        })
+      }
       try {
-        let res = await apiClient.register(this.state);
-        console.log(res);
+        let res = await apiClient.createBankAccountToken(this.state);
+        apiClient.updateBankAccountDetails(res)
+        .then(res => {
+            console.log('Status is %o', res.user)
+            this.props.accountSignIn(res.user)
+        })
       } catch (err) {
         console.log('Signup failed.', err);
       }
@@ -49,6 +96,26 @@ class CaptureBankInfo extends Component {
                 </h2>
             </div>
             <form onSubmit={this.handleSubmit}>
+            <input
+                className="name form__input"
+                type="text"
+                id="accountHolderName"
+                name="accountHolderName"
+                placeholder="Account Holder Name"
+                value={this.state.accountHolderName}
+                onChange={this.handleChange}
+                required
+              />
+
+            <Dropdown
+                onChange={this.handleDDChange}
+                options={accountTypeOptions}
+                placeholder='Choose an option'
+                selection
+                value={this.state.accountHolderType}
+                className="name form__input"
+              />
+
               <input
                 className="new-section name form__input"
                 type="text"
@@ -70,9 +137,11 @@ class CaptureBankInfo extends Component {
                 onChange={this.handleChange}
                 required
               />
+
+
   
               <button type="submit" className="btn btn-primary btn-full">
-                Create account
+                Add bank account
               </button>
   
               <p className={`error ${this.state.error && 'show'}`}>
@@ -94,5 +163,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { signIn, signOut }
+  { signIn, signOut, accountSignIn }
 )(CaptureBankInfo);

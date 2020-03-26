@@ -1,8 +1,13 @@
 import API from "../axiosApi";
+import {loadStripe} from '@stripe/stripe-js';
 const axios = require("axios");
 const stripe = require("stripe")("sk_test_wcPqI47agQt8hXOnZRAqeeen00tGgkDtny");
 const token = "sk_test_wcPqI47agQt8hXOnZRAqeeen00tGgkDtny";
 var querystring = require('querystring');
+
+
+
+
 
 const apiClient = {
   stripe,
@@ -82,6 +87,21 @@ const apiClient = {
     return new Promise((resolve, reject) => {
       console.log("Sending this data to custom connect is %o");
       API.post(`/api/v1/users/custom-connect`)
+        .then(rsp => {
+          resolve(rsp.data);
+          return;
+        })
+        .catch(error => {
+          console.log(error);
+          reject(error.message);
+          return;
+        });
+    });    
+  },
+  updateBankAccountDetails: async function(params){
+    return new Promise((resolve, reject) => {
+      console.log("Sending this data to custom connect is %o");
+      API.post(`/api/v1/users/bank-account`, params)
         .then(rsp => {
           resolve(rsp.data);
           return;
@@ -388,6 +408,28 @@ const apiClient = {
         .catch(err => {
           console.log("Error received from server is %o", err)
         });
+    });    
+  },
+  createBankAccountToken: async function(params){
+    return new Promise(async (resolve, reject) => {
+      // asynchronously called
+      const stripe = await loadStripe('pk_test_XvODp9OF6PFNt7Yka7dieFYp00MTqbXTDK');
+
+      stripe.createToken('bank_account', {
+                          country: 'US',
+                          currency: 'usd',
+                          routing_number: params.routingNumber,
+                          account_number: params.bankAccountNumber,
+                          account_holder_name: params.accountHolderName,
+                          account_holder_type: params.accountHolderType,
+                        })
+      .then(res => {
+        console.log('Result is %o', res.token)
+        resolve(res.token)
+      })
+      .catch (err => {
+        console.log('Error is %o', err)
+      })
     });    
   }
 };
