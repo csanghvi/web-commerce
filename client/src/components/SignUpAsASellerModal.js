@@ -27,11 +27,12 @@ class SignUpAsASellerModal extends React.Component {
         this.setIsOpen = this.setIsOpen.bind(this)
         this.openModal = this.openModal.bind(this)
         this.closeModal = this.closeModal.bind(this)
-        console.log("REACT APP CLIent id is %o", process.env.REACT_APP_STRIPE_CLIENT_ID)
+        console.log("REACT APP Client id is %o", process.env.REACT_APP_STRIPE_CLIENT_ID)
+        let accountType = this.props.currentUserObj.stripeAccountType === "CUSTOM" ? true : false
         this.state = {
            isOpen:true,
            connectStr:`https://connect.stripe.com/express/oauth/authorize?client_id=${process.env.REACT_APP_STRIPE_CLIENT_ID}&state=testing&suggested_capabilities[]=card_payments&stripe_user[email]=${this.props.currentUserObj.email}`,
-           isCustom: false,
+           isCustom:  accountType,
            customConnectStr: ''
         }
       }
@@ -87,18 +88,14 @@ class SignUpAsASellerModal extends React.Component {
       renderConnectOptions = () => {
         return (
           <div>
-            <div className="sr-legal-text">
-            This platform uses Stripe to get you paid quickly and keep your personal and payment information secure. Thousands of companies around the world trust Stripe to process payments for their users. Set up a Stripe account to get paid with this platform
+            <div style={{color:'blueviolet', textAlign:'center'}}>
+            This platform uses Stripe to get you paid quickly and keep your personal and payment information secure. 
             </div>
             <div className="submit-card-button" style={{marginTop:"4px"}}>
-             <button className="btn--green" ><a className="btn--text" href={this.state.connectStr}>Lets' go &rarr;</a></button>
-                                              
-            </div>
-            <div className="sr-legal-text">
-            Use custom connect
-            </div>
-            <div className="submit-card-button" style={{marginTop:"4px"}}>
-              <button className="btn--green" onClick={this.setupCustomConnect}>Setup custom</button>
+             <button className="btn--green" >
+               <a className="btn--text" href={this.state.connectStr}>Express</a>
+            </button>
+              <button className="btn--green" onClick={this.setupCustomConnect} style={{marginLeft:'4px'}}>Custom</button>
             </div>
           </div>
         )

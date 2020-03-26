@@ -94,7 +94,7 @@ const Users = new Schema(
     stripeAccountType: {
       type: String,
       enum: ["CUSTOM", "EXPRESS"],
-      default: "CUSTOM"
+      default: "EXPRESS"
     },
     userType: {
       type: String,

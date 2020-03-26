@@ -68,6 +68,20 @@ const apiClient = {
         });
     });
   },
+  updateAccount: async function(userParams) {
+    return new Promise((resolve, reject) => {
+      API.post(`/api/v1/users/update-account`, userParams)
+        .then(rsp => {
+          resolve(rsp);
+          return;
+        })
+        .catch(error => {
+          console.log(error);
+          reject(error.message);
+          return;
+        });
+    });
+  },
   createPaymentIntent: async function(params) {
     return new Promise((resolve, reject) => {
       console.log("Sending this data to create intent is %o", params);
