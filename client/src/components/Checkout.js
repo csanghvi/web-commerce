@@ -76,7 +76,7 @@ const CheckoutForm = (props) => {
         .then(res => {
           console.log("Res of createPaymentIntent %o", res);
           setClientSecret(res.data.clientSecret);
-          console.log("props.clientSecret is %o", props.clientSecret);
+          console.log("props.clientSecret is %o", clientSecret);
           apiClient
             .fetchCustomerPaymentMethods(props.currentUserObj.stripeCustomerId)
             .then(card => {
@@ -107,119 +107,128 @@ const CheckoutForm = (props) => {
   }
 
   // Handle form submission.
-  const handleSubmit = async (event) => {
+  const handleSubmit = async event => {
     event.preventDefault();
-    const card = elements.getElement(CardElement);
-    const result = await stripe.createToken(card)
-    if (result.error) {
-      // Inform the user if there was an error.
-      setError(result.error.message);
-    } else {
-      setError(null);
-      // Send the token to your server.
-      console.log('client secret is %o', clientSecret)
-      if (props.type === "subscription") {
-        stripe.createPaymentMethod({
-          type: 'card',
-          card: card,
-          billing_details: {
-            name: `${props.currentUserObj.firstName} ${props.currentUserObj.lastName}`,
-            email: props.currentUserObj.email
-          }          
-        })
-        .then(function(result) {
-          if (result.error) {
-            // Show error to your customer
-            setError(result.error.message);
-          } else {
-            // The payment has been processed!
-            //response.paymentIntent && response.paymentIntent.status === 'succeeded'
-            
-            /*
+    if (paymentOption === "new") {
+      var card = elements.getElement(CardElement);
+      var result = await stripe.createToken(card);
+
+      if (result.error) {
+        // Inform the user if there was an error.
+        setError(result.error.message);
+      } else {
+        setError(null);
+        // Send the token to your server.
+        console.log("client secret is %o", clientSecret);
+        if (props.type === "subscription") {
+          stripe
+            .createPaymentMethod({
+              type: "card",
+              card: card,
+              billing_details: {
+                name: `${props.currentUserObj.firstName} ${props.currentUserObj.lastName}`,
+                email: props.currentUserObj.email
+              }
+            })
+            .then(function(result) {
+              if (result.error) {
+                // Show error to your customer
+                setError(result.error.message);
+              } else {
+                // The payment has been processed!
+                //response.paymentIntent && response.paymentIntent.status === 'succeeded'
+
+                /*
               Create subscription server call returns
               {status, subscription, pi/psi}
             */
-            console.log('Result is %o', result.paymentMethod.id)
-            apiClient
-            .createSubscription({
-              stripeCustomerId: props.currentUserObj.stripeCustomerId,
-              plan: props.id,
-              nickname:props.nickname,
-              hasFreeTrial:props.hasFreeTrial,
-              amount: props.amount,
-              pm: result.paymentMethod.id,
-              coupon:couponCode
-            })
-            .then(rsp => {
-              console.log("props.clientSecret is %o", rsp.subscription);
-              if (rsp.status === 'setup') {
-                if (rsp.subscription.pending_setup_intent) {
-                  stripe.confirmCardSetup(rsp.psi)
-                  .then(function(result) {
-                    if (result.error) {
-                      setError(result.error.message);
+                console.log("Result is %o", result.paymentMethod.id);
+                apiClient
+                  .createSubscription({
+                    stripeCustomerId: props.currentUserObj.stripeCustomerId,
+                    plan: props.id,
+                    nickname: props.nickname,
+                    hasFreeTrial: props.hasFreeTrial,
+                    amount: props.amount,
+                    pm: result.paymentMethod.id,
+                    coupon: couponCode
+                  })
+                  .then(rsp => {
+                    console.log("props.clientSecret is %o", rsp.subscription);
+                    if (rsp.status === "setup") {
+                      if (rsp.subscription.pending_setup_intent) {
+                        stripe.confirmCardSetup(rsp.psi).then(function(result) {
+                          if (result.error) {
+                            setError(result.error.message);
+                          } else {
+                            setStatus(rsp.subscription.status);
+                            props.paymentResult(rsp.subscription);
+                          }
+                        });
+                      } else {
+                        setStatus(rsp.subscription.status);
+                        props.paymentResult(rsp.subscription);
+                      }
                     } else {
-                      setStatus(rsp.subscription.status);
-                      props.paymentResult(rsp.subscription)
+                      //It was a charge
+                      if (
+                        rsp.subscription.latest_invoice.paymentIntent.status ===
+                        "requires_action"
+                      ) {
+                        stripe
+                          .confirmCardPayment(rsp.pi, {
+                            payment_method:
+                              rsp.subscription.latest_invoice.paymentIntent
+                                .payment_method
+                          })
+                          .then(function(result) {
+                            if (result.error) {
+                              setError(result.error.message);
+                            } else {
+                              setStatus(rsp.subscription.status);
+                              props.paymentResult(rsp.subscription);
+                            }
+                          });
+                      } else {
+                        setStatus(rsp.subscription.status);
+                        props.paymentResult(rsp.subscription);
+                      }
                     }
-                  });
-                } else {
-                  setStatus(rsp.subscription.status);
-                  props.paymentResult(rsp.subscription)                  
-                }
-              } else { //It was a charge
-                if (rsp.subscription.latest_invoice.paymentIntent.status === "requires_action") {
-                  stripe.confirmCardPayment(rsp.pi, {payment_method: rsp.subscription.latest_invoice.paymentIntent.payment_method})
-                  .then(function(result) {
-                    if (result.error) {
-                      setError(result.error.message);
-                    } else {
-                      setStatus(rsp.subscription.status);
-                      props.paymentResult(rsp.subscription)
-                    }
-                  });
-                } else {
-                  setStatus(rsp.subscription.status);
-                  props.paymentResult(rsp.subscription)                  
-                }
-            }
-              
+                  })
 
-            })
-      
-            .catch(err => {
-              console.log("Payment Intent could not be created.", err);
+                  .catch(err => {
+                    console.log("Payment Intent could not be created.", err);
+                  });
+              }
             });
-            
-          }
-      });
-
-      } else {
-
+        } else {
+          stripe
+            .confirmCardPayment(clientSecret, {
+              payment_method: {
+                card: card
+              },
+              receipt_email: props.currentUserObj.email,
+              setup_future_usage: saveCard ? "off_session" : ""
+            })
+            .then(function(result) {
+              if (result.error) {
+                // Show error to your customer
+                setError(result.error.message);
+              } else {
+                // The payment has been processed!
+                //response.paymentIntent && response.paymentIntent.status === 'succeeded'
+                console.log("Result is %o", result.paymentIntent.status);
+                setStatus(result.paymentIntent.status);
+                props.paymentResult(result.paymentIntent.status);
+              }
+            });
+        }
+      }
+    } else {
       
-        stripe.confirmCardPayment(clientSecret, {
-          payment_method: {
-            card: card
-          },
-          receipt_email: props.currentUserObj.email,
-          setup_future_usage: saveCard ? "off_session" : ""
-        })
-        .then(function(result) {
-          if (result.error) {
-            // Show error to your customer
-            setError(result.error.message);
-          } else {
-            // The payment has been processed!
-            //response.paymentIntent && response.paymentIntent.status === 'succeeded'
-            console.log('Result is %o', result.paymentIntent.status)
-            setStatus(result.paymentIntent.status);
-            props.paymentResult(result.paymentIntent.status)
-            
-          }
-      });
+
     }
-  }
-}
+  };
 
 const selectCoupon = (e,data) => {
   console.log('Dropdown value selected is %o &data is %o', e.target, data.value)

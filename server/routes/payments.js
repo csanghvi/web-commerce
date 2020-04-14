@@ -164,6 +164,7 @@ module.exports = app => {
               transfer_data: {
                 destination: sellerObj.stripeAccountId,
               },
+              on_behalf_of: sellerObj.stripeAccountId,
               // Verify your integration in this guide by including this parameter
               metadata: {
                 listingId: listingObj.id,

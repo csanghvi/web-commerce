@@ -115,6 +115,14 @@ module.exports = (app) => {
                 type: 'custom',
                 country: 'US',
                 email: user.email,
+                settings: {
+                  payouts: {
+                    schedule: {
+                      interval:'manual'
+                    },
+                    statement_descriptor: user.email
+                  }                
+                 },
                 requested_capabilities: [
                   'card_payments',
                   'transfers',
@@ -205,9 +213,27 @@ module.exports = (app) => {
 
              var savedUser = await Users.findOneAndUpdate({_id: user._id}, {$set:{stripeAccountId:stripeAccountId}}, {new: true, useFindAndModify: false}) 
               console.log("After saving user %o", savedUser);
+
+              /*
+                Update account on stripe
+              */
+             await stripe.accounts.update( stripeAccountId,
+              {                
+                settings: {
+                payouts: {
+                  schedule: {
+                    interval:'manual'
+                  },
+                  statement_descriptor: user.email
+                }                
+               }
+              }
+            );
+
               res.status(200).json({
                 user: savedUser
               });
+
               
             } else {
               res.status(400).send("Failed to update user");

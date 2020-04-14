@@ -66,14 +66,20 @@ class MyDashboard extends Component {
         const charges = this.state.charges
         var chargeItems = ""
         if (charges){
-            chargeItems = charges.map(charge => (
+            chargeItems = charges.map(charge => {
+                var date = new Date(charge.created*1000)
+                var day = date.getDate();
+                var month = date.getMonth();
+                var year = date.getFullYear();
+                var fullDate = day + "-" +(month + 1) + "-" + year
+                return (
                 <React.Fragment key={charge.id}>
                     <Table.Row key={charge.id}>
                         <Table.Cell width="5">{charge.id}</Table.Cell>
                         <Table.Cell width="3">${Number.parseFloat(charge.amount/100).toFixed(2)}</Table.Cell>
                         <Table.Cell width="3"> ${Number.parseFloat((charge.amount - charge.application_fee_amount)/100).toFixed(2)}
                         </Table.Cell>
-                        <Table.Cell textAlign='right' width="3"> {charge.created}</Table.Cell>
+                        <Table.Cell textAlign='right' width="3"> {fullDate}</Table.Cell>
                         <Table.Cell textAlign='right' width="2">
                             {!charge.refunded ? 
                                     <Button
@@ -92,7 +98,8 @@ class MyDashboard extends Component {
             
                     </Table.Row>
               </React.Fragment>
-             ))
+             )
+            })
         }
 
         return chargeItems
