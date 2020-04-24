@@ -152,13 +152,13 @@ class ModifySettings extends Component {
     
                 <h2
                   className="form__input"
-                ><a className="stripe-dashboard" href={redirectLink} target="_blank">Update Stripe account</a>
+                ><a className="stripe-dashboard" href={redirectLink} target="_blank">Update stripe account</a>
                 </h2>
                 <h2
                   className="form__input"
                 >
                   {this.state.isCustom ? 
-                  <Link to = '/bank-account'> Update payout account</Link>
+                  <Link to = '/bank-account' style={{color:'green'}}> Update payout account</Link>
                   :
                   <a className="stripe-dashboard" href={this.state.loginLink} target="_blank">Update payout account</a>
                   }

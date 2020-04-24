@@ -99,10 +99,10 @@ const apiClient = {
   },
   createCustomConnect: async function(){
     return new Promise((resolve, reject) => {
-      console.log("Sending this data to custom connect is %o");
+      console.log("Requesting back end to create a custom connect account");
       API.post(`/api/v1/users/custom-connect`)
         .then(rsp => {
-          resolve(rsp.data);
+          resolve(rsp.data.user);
           return;
         })
         .catch(error => {
@@ -256,7 +256,7 @@ const apiClient = {
        };
     
        const bodyParameters = {
-        "redirect_url": "http://localhost:3000/settings"
+        "redirect_url": `${process.env.REACT_APP_BASEURL}/settings`
        };
       axios.post(`https://api.stripe.com/v1/accounts/${stripeAccountId}/login_links`, {}, config)
         .then(rsp => {
@@ -279,7 +279,7 @@ const apiClient = {
       axios.get(`https://api.stripe.com/v1/payment_methods?customer=${customerId}&type=card`, config)
         .then(rsp => {
           console.log("Returning response after making stripe call %o", rsp);
-          resolve(rsp.data.data[0].card);
+          resolve(rsp.data.data[0]);
         })
         .catch(err => {
           console.log("Error received from server is %o", err)
@@ -393,8 +393,8 @@ const apiClient = {
        };
        const bodyParameters = {
         account: stripeAccountId,
-        failure_url:"http://localhost:3000/settings",
-        success_url: "http://localhost:3000/listings/new",
+        failure_url:`${process.env.REACT_APP_BASEURL}/settings`,
+        success_url: `${process.env.REACT_APP_BASEURL}/listings/new`,
         type: type
        };
        console.log("Sending bodyparams as %o", bodyParameters)
@@ -444,6 +444,59 @@ const apiClient = {
       .catch (err => {
         console.log('Error is %o', err)
       })
+    });    
+  },
+  retrievePaymentIntent: async function(paymentIntentId){
+    return new Promise((resolve, reject) => {
+      // asynchronously called
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+       };
+      axios.get(`https://api.stripe.com/v1/payment_intents/${paymentIntentId}`, config)
+        .then(rsp => {
+          console.log("Returning response after fetching account obj %o", rsp.data);
+          resolve(rsp.data);
+        })
+        .catch(err => {
+          console.log("Error received from server is %o", err)
+        });
+    });    
+  },
+  setTransferReversal: async function(tr){
+    return new Promise((resolve, reject) => {
+      // asynchronously called
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+       };
+
+      axios.post(`https://api.stripe.com/v1/transfers/${tr}/reversals`, {}, config)
+        .then(rsp => {
+          console.log("After creating a transfer reversal %o", rsp.data);
+          resolve(rsp.data);
+        })
+        .catch(err => {
+          console.log("Error received from server is %o", err)
+        });
+    });    
+  },
+  sendPayout: async function(amount, stripeAccountId){
+    return new Promise((resolve, reject) => {
+      // asynchronously called
+      const config = {
+        headers: { Authorization: `Bearer ${token}` , "Stripe-Account": stripeAccountId}
+       };
+       const bodyParameters = {
+        amount: amount,
+        currency:"usd",
+       };
+      axios.post(`https://api.stripe.com/v1/payouts`, querystring.stringify(bodyParameters), config)
+        .then(rsp => {
+          console.log("After payout %o", rsp.data);
+          resolve(rsp.data);
+        })
+        .catch(err => {
+          console.log("Error received from server is %o", err)
+        });
     });    
   }
 };

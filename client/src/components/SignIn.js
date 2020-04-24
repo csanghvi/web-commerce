@@ -83,6 +83,7 @@ class SignIn extends Component {
               <button
                 className="btn btn-secondary btn-half"
                 onClick={this.loginAsBuyer}
+                type="button" 
               >
                 Buyer demo
               </button>
@@ -90,6 +91,7 @@ class SignIn extends Component {
               <button
                 className="btn btn-secondary btn-half right"
                 onClick={this.loginAsSeller}
+                type="button" 
               >
                 Seller demo
               </button>

@@ -75,6 +75,30 @@ module.exports = app => {
         };
         let orderObj = new Orders(order);
         await orderObj.save();
+
+        /**
+         * Today, when you create a Destination charge, whether using the Charges API or the PaymentIntents API, 
+         * the metadata you set on the platform will not propagate to the connected account's charge. 
+         * This is expected behavior as we treat this information as private to the platform. 
+         * https://confluence.corp.stripe.com/display/DevHelpKB/How+can+you+carry+over+the+description+or+metadata+to+the+payment+on+the+connected+account+for+a+destination+charge
+         */
+
+        
+        const chargeObj = await stripe.charges.retrieve(data.object.charges.data[0].id, {
+          expand: ['transfer'],
+        });
+        console.log (' Distination payment id is %o', chargeObj.transfer.destination_payment)
+        const updateMetadata = await stripe.charges.update(
+          chargeObj.transfer.destination_payment,
+          {metadata: data.object.metadata},
+          {stripeAccount: chargeObj.transfer.destination}
+        );
+        console.log('Successfully added metadata')
+
+
+
+
+
       }
     } else if (eventType === "payment_intent.payment_failed") {
       console.log("❌ Payment failed.");

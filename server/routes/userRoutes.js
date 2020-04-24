@@ -120,8 +120,12 @@ module.exports = (app) => {
                     schedule: {
                       interval:'manual'
                     },
-                    statement_descriptor: user.email
-                  }                
+                    statement_descriptor: 'PLATFORM'
+                  },
+                  payments: {
+                    statement_descriptor: user.email,
+                    statement_descriptor_prefix:'PLATFORM'
+                  }              
                  },
                 requested_capabilities: [
                   'card_payments',
@@ -224,8 +228,12 @@ module.exports = (app) => {
                   schedule: {
                     interval:'manual'
                   },
-                  statement_descriptor: user.email
-                }                
+                  statement_descriptor: 'PLATFORM'
+                },
+                payments: {
+                  statement_descriptor: user.email,
+                  statement_descriptor_prefix:'PLATFORM'
+                }              
                }
               }
             );

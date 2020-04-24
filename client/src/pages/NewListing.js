@@ -5,25 +5,24 @@ import { connect } from "react-redux";
 import { signIn, signOut, checkLoginStatus } from "../actions";
 import SignUpAsASellerModal from "../components/SignUpAsASellerModal"
 import apiClient from '../api/apiClient'
-
-import Header from "../components/Header"
+import {Segment, Image} from 'semantic-ui-react'
+import expressOauth from '../img/express-oauth.png'
+import HeaderComp from "../components/Header"
 
 class NewListing extends Component {
   constructor(props) {
     super(props)
-  
-    this.state = {
-       isStripeAccount: false
-    }
-  }
-
-  componentDidMount(){
     this.props.checkLoginStatus()
     .then(() => {
       this.isAccountReady()
     })
-    
+    this.state = {
+       isStripeAccount: true,
+       selectAccountType: ''
+    }
   }
+
+
 
   isAccountReady = () => {
     if (this.props.isSignedIn){
@@ -43,19 +42,36 @@ class NewListing extends Component {
 
         })
       } else {
+        this.setState({
+          isStripeAccount:false
+        })
         return false
       }
     } 
   }
 
+  selectAccountType=(type)=>{
+    this.setState({
+      selectAccountType:type
+    })
+  }
+
+  renderExpressApiCall = () =>{
+    return (
+      <Segment placeholder compact textAlign='center'>
+        <Image src={expressOauth} />
+    </Segment>
+    )
+  }
   
     render() {
       console.log("Value of current user is %o", this.props.currentUserObj)
       let isConnectedAccount = this.state.isStripeAccount
+      let selectAccountType = this.state.selectAccountType
         return (
             <div>
                  <div className="header_other-pages">
-                    <Header/>
+                    <HeaderComp/>
                  </div>
                 <div className = "ui container">
                     {this.props.isSignedIn ?
@@ -65,12 +81,16 @@ class NewListing extends Component {
                     </React.Fragment>
                     : 
                     <React.Fragment>
-                      <SignUpAsASellerModal />
+                      <SignUpAsASellerModal selectAccountType={this.selectAccountType}/>
                     </React.Fragment>
                     :  
                     <React.Fragment>
                        <Redirect to="/login" />;
                     </React.Fragment>}
+
+                    {(selectAccountType === 'express') &&
+                      this.renderExpressApiCall()
+                    }
                 </div>
            </div>
         )

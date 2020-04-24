@@ -7,7 +7,7 @@ import {loadStripe} from '@stripe/stripe-js';
 
 import apiClient from '../api/apiClient'
 import Stripe from 'stripe';
-
+import Popup from './Popup.js'
 
 const stripePromise = loadStripe('pk_test_XvODp9OF6PFNt7Yka7dieFYp00MTqbXTDK')
 const stripe = window.Stripe('pk_test_XvODp9OF6PFNt7Yka7dieFYp00MTqbXTDK')
@@ -36,7 +36,9 @@ class TicketsModal extends React.Component {
     this.state = {
        clientSecret:'',
        isOpen:false,
-       paymentResult:''
+       paymentResult:'', 
+       receiptUrl:'',
+       paymentIntent:''
     }
   }
   setIsOpen (flag){
@@ -92,12 +94,29 @@ class TicketsModal extends React.Component {
     }
   }
 
-  render() {
+  setPaymentIntent = async (data) => {
+
+   var result = await apiClient.retrievePaymentIntent(data)
+    console.log('Retrieved intent is %o', result)
+    this.setState({
+      paymentIntent:data,
+      receiptUrl:result.charges.data[0].receipt_url
+    })
+
+  }
+
+   render() {
     const clientSecret = this.state.clientSecret
     var paymentResult = this.state.paymentResult
     var successStyle
+    var element
     if (paymentResult === "succeeded"){
-      paymentResult = `Payment successfully completed. Your ticket will be emailed to you at ${this.props.buyer}`
+      /*
+      Get receipt url
+      */
+      paymentResult = `Payment successfully completed. Your ticket will be emailed to you at ${this.props.buyer}.`
+
+      element = <h3>{paymentResult} <br/>Check receipt <a style={{color:'blue'}} target='_blank' href={this.state.receiptUrl}> here</a></h3>
       successStyle = {
         color:"green",
         fontSize:"1.4rem",
@@ -110,6 +129,7 @@ class TicketsModal extends React.Component {
         fontSize:"1.4rem",
         fontWeight:"700"
       }
+    element=<h3>{paymentResult}</h3>
     }
     console.log ('Client secret is %o', clientSecret)
     return (
@@ -117,13 +137,12 @@ class TicketsModal extends React.Component {
       { paymentResult ? 
       <React.Fragment>
         <span style={successStyle}>
-          {paymentResult}
+          {element}
         </span>
       </React.Fragment>
        : 
       <React.Fragment>
-          <button onClick={this.openModal} className="btn btn-half" disabled={!(this.props.selectedQuantity > 0)}>Pay with cards</button>
-          
+         <Popup openModal={this.openModal} selectedQuantity={this.props.selectedQuantity}/>          
           <Modal
             appElement={document.querySelector('#app')}
             isOpen={this.state.isOpen}
@@ -134,7 +153,7 @@ class TicketsModal extends React.Component {
           >
             {this.state.isOpen &&
               <Elements stripe={stripePromise}>
-                <Checkout id={this.props.id} paymentResult={this.paymentResult} totalAmount={this.props.totalAmount} quantity={this.props.selectedQuantity} selectedDate={this.props.selectedDate}/>
+                <Checkout id={this.props.id} setPaymentIntent={this.setPaymentIntent} paymentResult={this.paymentResult} totalAmount={this.props.totalAmount} quantity={this.props.selectedQuantity} selectedDate={this.props.selectedDate}/>
               </Elements>
             }
           </Modal>

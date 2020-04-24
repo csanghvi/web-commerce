@@ -1,9 +1,70 @@
 import React, { Component } from 'react'
-import { Grid, Image, Segment, Table, Icon, Button, Header, Menu, Message} from "semantic-ui-react"
+import { Grid, Image, Segment, Table, Icon, Button, Header, Menu, Message, Popup} from "semantic-ui-react"
 import { Redirect, Link, withRouter } from "react-router-dom";
 import apiClient from '../api/apiClient'
 import { connect } from "react-redux";
 import { signIn, signOut } from "../actions";
+import _ from 'lodash';
+import payout from '../img/payout.png'
+import reversal from '../img/reversal.png'
+
+const PopupRefund = (props) => {
+    var issueRefund = (e,data) => {
+        apiClient
+        .setTransferReversal(data.value)
+        .then(res => {
+            
+        })
+    }
+    return (
+    <Popup trigger={<Button onClick={issueRefund} value={props.value} color="red" >Choose</Button>} flowing hoverable>
+    <Grid centered divided columns={1}>
+      <Grid.Column textAlign='center'>
+          <Image src={reversal}></Image>
+      </Grid.Column>
+    </Grid>
+  </Popup>
+  )
+}
+
+  const PopupPayout = (props) => {
+      var sendPayout = (e,data) => {
+        console.log('Amount of payout is %o & stripe account id is %o', data.value, props.stripeAccountId)
+        apiClient
+        .sendPayout(data.value, props.stripeAccountId)
+        .then(res => {
+            
+        })
+      }
+      return (
+    <Popup trigger={<Button onClick={sendPayout} value={props.amount} color="red" >Choose</Button>} flowing hoverable>
+    <Grid centered divided columns={1}>
+      <Grid.Column textAlign='center'>
+          <Image src={payout}></Image>
+      </Grid.Column>
+    </Grid>
+  </Popup>
+  )
+  }
+
+const PopupOptions = (props) => (
+    <Popup trigger={<Icon name='setting'></Icon>} flowing on='[click,hover]'>
+      <Grid centered divided columns={2}>
+        <Grid.Column textAlign='center'>
+        <Header as='h4'>Issue Refund</Header>
+            {!props.refunded ? 
+            <PopupRefund value={props.value}/>
+            :
+            <Icon name='refresh' color='red' />
+            }
+        </Grid.Column>
+        <Grid.Column textAlign='center'>
+        <Header as='h4'>Force Payout</Header>
+          <PopupPayout amount={props.amount} stripeAccountId={props.stripeAccountId}/>
+        </Grid.Column>
+      </Grid>
+    </Popup>
+  )
 
 class MyDashboard extends Component {
     constructor(props) {
@@ -21,9 +82,10 @@ class MyDashboard extends Component {
     componentDidMount () {
         apiClient.fetchAllCharges(this.props.currentUserObj.stripeAccountId)
         .then(rsp => {
-            console.log("In fetch all charges %o", rsp)
+            const charges = _.orderBy(rsp, ['created'],['desc'])
+            console.log("In fetch all charges %o", charges)
             this.setState({
-                charges:rsp
+                charges:charges
             })
         })
         apiClient.fetchBalanceTransactions(this.props.currentUserObj.stripeAccountId)
@@ -62,9 +124,19 @@ class MyDashboard extends Component {
         })
     }
 
+    selectOrderAction = (e,data) => {
+        console.log('Value of e is %o, data is %o', e.target.value)
+        apiClient
+        .setTransferReversal(e.target.value)
+        .then(res => {
+            this.setState(this.state)
+        })
+
+    }
     renderChargesTable = () =>{
-        const charges = this.state.charges
+        const charges = this.state.charges;
         var chargeItems = ""
+        
         if (charges){
             chargeItems = charges.map(charge => {
                 var date = new Date(charge.created*1000)
@@ -72,28 +144,27 @@ class MyDashboard extends Component {
                 var month = date.getMonth();
                 var year = date.getFullYear();
                 var fullDate = day + "-" +(month + 1) + "-" + year
+                var eventDate
+                var eventTitle
+                var eventId
+                if (charge.metadata){
+                    eventDate = charge.metadata.selectedDate
+                    eventTitle = charge.metadata.listingTitle
+                    eventId = charge.metadata.listingId
+                }
+                var eventdate 
                 return (
                 <React.Fragment key={charge.id}>
                     <Table.Row key={charge.id}>
-                        <Table.Cell width="5">{charge.id}</Table.Cell>
-                        <Table.Cell width="3">${Number.parseFloat(charge.amount/100).toFixed(2)}</Table.Cell>
-                        <Table.Cell width="3"> ${Number.parseFloat((charge.amount - charge.application_fee_amount)/100).toFixed(2)}
+                        <Table.Cell width="4">{charge.id}</Table.Cell>
+                        <Table.Cell width="2">${Number.parseFloat(charge.amount/100).toFixed(2)}</Table.Cell>
+                        <Table.Cell width="2"> ${Number.parseFloat((charge.amount - charge.application_fee_amount)/100).toFixed(2)}
                         </Table.Cell>
-                        <Table.Cell textAlign='right' width="3"> {fullDate}</Table.Cell>
+                        <Table.Cell textAlign='right' width="2"> {eventDate}</Table.Cell>
+                        <Table.Cell textAlign='right' width="2"> <a style={{color:'blue'}} href={`/listings/:${eventId}`}>{eventTitle}</a></Table.Cell>
+                        <Table.Cell textAlign='right' width="2"> {fullDate}</Table.Cell>
                         <Table.Cell textAlign='right' width="2">
-                            {!charge.refunded ? 
-                                    <Button
-                                    color="red"
-                                    onClick={this.selectOrderAction}
-                                    >Refund</Button>
-                                    :
-                                    <span style={{alignContent:"center"}}>
-                                    <Icon
-                                    name="refresh"
-                                    color="red"
-                                    />
-                                    </span>
-                                }
+                        <PopupOptions refunded={charge.refunded} value={charge.source_transfer} amount={(charge.amount - charge.application_fee_amount)} stripeAccountId={this.props.currentUserObj.stripeAccountId}></PopupOptions>
                         </Table.Cell>
             
                     </Table.Row>
@@ -106,7 +177,7 @@ class MyDashboard extends Component {
     }
     renderAccountWarning = () => {
         let accountWarning = <span/>
-        if (!this.props.currentUserObj.stripeAccountPayouts){
+        if (this.props.currentUserObj.stripeAccountType !== 'EXPRESS' && !this.props.currentUserObj.stripeAccountPayouts){
             accountWarning =   
                                 <Message warning>
                                 <h3> You must create bank account to receive payouts! </h3>
@@ -131,7 +202,7 @@ class MyDashboard extends Component {
                              <Segment placeholder>
                                  <Header as='h3' textAlign={"center"}>
                                     <Icon name='dollar' />
-                                    <Header.Content>Total Volume: ${this.state.totalVolume}</Header.Content><n/>
+                                    <Header.Content>Total Volume: ${this.state.totalVolume}</Header.Content><br/>
                                     <Icon name='dollar' />
                                     <Header.Content>Net Volume: ${this.state.netVolume}</Header.Content>
                                  </Header>
@@ -147,22 +218,24 @@ class MyDashboard extends Component {
                                  </Header>
                             </Segment>                        </Grid.Column>
                     </Grid.Row>
-                    <Grid.Row columns={2}>
+                    <Grid.Row >
                         <Grid.Column >
                                 <Table striped color="red" key="red">
                                     <Table.Header>
                                         <Table.Row>
-                                            <Table.HeaderCell width="5">Payment Id</Table.HeaderCell>
-                                            <Table.HeaderCell width="3">Amount</Table.HeaderCell>
-                                            <Table.HeaderCell width="3"> Net </Table.HeaderCell>
-                                            <Table.HeaderCell textAlign='right' width="3">Created</Table.HeaderCell>
+                                            <Table.HeaderCell width="4">Payment Id</Table.HeaderCell>
+                                            <Table.HeaderCell width="2">Amount</Table.HeaderCell>
+                                            <Table.HeaderCell width="2"> Net </Table.HeaderCell>
+                                            <Table.HeaderCell width="2"> Event Date </Table.HeaderCell>
+                                            <Table.HeaderCell width="2"> Event </Table.HeaderCell>
+                                            <Table.HeaderCell textAlign='right' width="2">Purchase Date</Table.HeaderCell>
                                             <Table.HeaderCell textAlign='right' width="2">Actions</Table.HeaderCell>
                                         </Table.Row>
                                     </Table.Header>
                                     <Table.Body>{this.renderChargesTable()}</Table.Body>
                                     <Table.Footer>
                                             <Table.Row>
-                                                <Table.HeaderCell colSpan='3'>
+                                                <Table.HeaderCell colSpan='7'>
                                                     <Menu floated='right' pagination>
                                                         <Menu.Item as='a' icon>
                                                         <Icon name='chevron left' />

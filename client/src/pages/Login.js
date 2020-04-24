@@ -7,7 +7,7 @@ export default class Home extends Component {
         return (
             <div className="header_primary">
                 <Header/>
-                <div class="signin_container">
+                <div className="signin_container">
                         <SignIn />
                 </div>
            </div>

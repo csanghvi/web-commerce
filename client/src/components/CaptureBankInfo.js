@@ -4,7 +4,7 @@ import cookie from 'js-cookie';
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { signIn, signOut, accountSignIn } from "../actions";
-import { Dropdown } from 'semantic-ui-react'
+import { Dropdown, Button } from 'semantic-ui-react'
 
 
 const accountTypeOptions = [
@@ -42,6 +42,8 @@ class CaptureBankInfo extends Component {
         accountHolderName: '',
         accountHolderType: '',
         error: '',
+        updated: false,
+        processing:false,
       };
   
       this.handleChange = this.handleChange.bind(this);
@@ -56,6 +58,8 @@ class CaptureBankInfo extends Component {
   
       this.setState({
         [name]: value,
+        updated:false,
+        error:''
       });
     }
 
@@ -68,6 +72,9 @@ class CaptureBankInfo extends Component {
   
     async handleSubmit(event) {
       event.preventDefault();
+      this.setState({
+        processing:true
+      })
       let errors = validateForm(this.state)
       if (errors.length > 0) {
         this.setState({
@@ -79,11 +86,49 @@ class CaptureBankInfo extends Component {
         apiClient.updateBankAccountDetails(res)
         .then(res => {
             console.log('Status is %o', res.user)
+            this.setState({
+              updated:true,
+              processing:false
+            })
             this.props.accountSignIn(res.user)
+        })
+        .catch(err => {
+          this.setState({
+            error:err,
+            processing:false
+          })
         })
       } catch (err) {
         console.log('Signup failed.', err);
       }
+    }
+
+    preFillDefaults = (e)=>{
+      e.preventDefault()
+      this.setState ({
+        routingNumber: '110000000',
+        bankAccountNumber: '000123456789',
+        accountHolderName: `${this.props.currentUserObj.firstName} ${this.props.currentUserObj.lastName}`,
+        accountHolderType: 'individual',
+        error: '',
+      });
+    }
+
+    renderSubmitButton = ()=>{
+      if (this.state.processing){
+        return (
+          <Button loading type="submit" className="btn btn-primary btn-full" style={{background:'blueviolet', color:'white'}}>
+          Add bank account
+        </Button>
+        )
+      } else {
+        return (
+          <Button type="submit" className="btn btn-primary btn-full" style={{background:'blueviolet', color:'white'}}>
+          Add bank account
+        </Button>
+        )
+      }
+
     }
 
   
@@ -137,15 +182,15 @@ class CaptureBankInfo extends Component {
                 onChange={this.handleChange}
                 required
               />
-
-
-  
-              <button type="submit" className="btn btn-primary btn-full">
-                Add bank account
-              </button>
+              <a className="name form__input" onClick={this.preFillDefaults} style={{color:'blue', marginLeft:'25%', fontSize:'1.5em', cursor: 'pointer'}}> Pre-fill defaults</a>
+              
+              {this.renderSubmitButton()}
   
               <p className={`error ${this.state.error && 'show'}`}>
                 {this.state.error && `Error: ${this.state.error}`}
+              </p>
+              <p className={`success ${this.state.updated && 'show'}`} style={{color:'green'}}>
+                {this.state.updated && `Successfully added bank account!`}
               </p>
             </form>
           </div>

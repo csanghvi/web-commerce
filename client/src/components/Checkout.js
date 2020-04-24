@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Dropdown } from "semantic-ui-react"
+import { Form, Dropdown, Button } from "semantic-ui-react"
 import {
   CardElement,
   Elements,
@@ -9,6 +9,7 @@ import {
 import { connect } from 'react-redux';
 import { signIn, signOut, setRelayUrl } from "../actions";
 import apiClient from '../api/apiClient'
+
 
 
 const couponOptions = [
@@ -52,9 +53,9 @@ const CheckoutForm = (props) => {
   const [processing, setProcessing] = useState(false);
   const [clientSecret, setClientSecret] = useState(null);
   const [existingCard, setExistingCard] = useState(null);
-  const [paymentOption, setPaymentOption] = useState(null);
+  const [paymentOption, setPaymentOption] = useState('new');
   const [couponCode, setCouponCode] = useState(null);
-
+  const [displayCardOptions, setDisplayCardOptions] = useState(false);
 
 
   const stripe = useStripe();
@@ -79,11 +80,12 @@ const CheckoutForm = (props) => {
           console.log("props.clientSecret is %o", clientSecret);
           apiClient
             .fetchCustomerPaymentMethods(props.currentUserObj.stripeCustomerId)
-            .then(card => {
-              if (card) {
-                console.log("Setting cards");
-                setExistingCard(card);
-              }
+            .then(cardData => {
+              if (cardData) {
+                console.log("Setting cards %o", cardData);
+                setExistingCard(cardData);
+              } 
+              setDisplayCardOptions(true)
             });
         })
 
@@ -109,6 +111,7 @@ const CheckoutForm = (props) => {
   // Handle form submission.
   const handleSubmit = async event => {
     event.preventDefault();
+    setProcessing(true)
     if (paymentOption === "new") {
       var card = elements.getElement(CardElement);
       var result = await stripe.createToken(card);
@@ -217,14 +220,33 @@ const CheckoutForm = (props) => {
               } else {
                 // The payment has been processed!
                 //response.paymentIntent && response.paymentIntent.status === 'succeeded'
-                console.log("Result is %o", result.paymentIntent.status);
+                console.log("Result is %o", result.paymentIntent);
                 setStatus(result.paymentIntent.status);
                 props.paymentResult(result.paymentIntent.status);
+                props.setPaymentIntent(result.paymentIntent.id)
+
               }
             });
         }
       }
     } else {
+      stripe
+      .confirmCardPayment(clientSecret, {
+        payment_method: existingCard.id,
+      })
+      .then(function(result) {
+        if (result.error) {
+          // Show error to your customer
+          setError(result.error.message);
+        } else {
+          // The payment has been processed!
+          //response.paymentIntent && response.paymentIntent.status === 'succeeded'
+          console.log("Result is %o", result.paymentIntent);
+          setStatus(result.paymentIntent.status);
+          props.paymentResult(result.paymentIntent.status);
+          props.setPaymentIntent(result.paymentIntent.id)
+        }
+      });
       
 
     }
@@ -268,11 +290,11 @@ const renderLegalText = () => {
 const renderSubmitOrSpinner = () => {
   if (processing) {
     return (
-    <div className="spinner" id="spinner"></div>
+      <Button loading style={{background:'blueviolet', color:'white'}} className="btn btn-full"><span id="button-text">Submit Payment</span></Button>
     )
   } else {
     return (
-    <button type="submit" className="btn btn-full"><span id="button-text">Submit Payment</span></button>
+    <Button onClick={handleSubmit} style={{background:'blueviolet', color:'white'}} className="btn btn-full"><span id="button-text">Submit Payment</span></Button>
     )
   }
 
@@ -283,7 +305,7 @@ const handlePaymentOption = (e) => {
 }
 
 const displayPaymentOptions = () =>{
-  const existingLabel = `Use card ending with ${existingCard.last4}`
+  const existingLabel = `Use card ending with ${existingCard.card.last4}`
     return (
       <div>
       <Form.Group inline>
@@ -316,6 +338,8 @@ const displayCardForm = () => {
 }
   return (
     <form onSubmit={handleSubmit}>
+      {displayCardOptions ? 
+      <React.Fragment>
       <div className="form-row">
         {existingCard ? 
         <React.Fragment>
@@ -338,6 +362,12 @@ const displayCardForm = () => {
       <div className="submit-card-button">
         {renderSubmitOrSpinner()}
       </div>
+      </React.Fragment>
+      :
+      <React.Fragment>
+      <div />
+      </React.Fragment>
+      }
     </form>
   );
 }

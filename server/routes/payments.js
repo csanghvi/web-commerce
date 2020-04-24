@@ -161,10 +161,11 @@ module.exports = app => {
               currency: "usd",
               customer: data.stripeCustomerId,
               application_fee_amount: Number(data.amount*100*0.05),
+              statement_descriptor_suffix:sellerObj.email,
               transfer_data: {
                 destination: sellerObj.stripeAccountId,
               },
-              on_behalf_of: sellerObj.stripeAccountId,
+              //on_behalf_of: sellerObj.stripeAccountId,
               // Verify your integration in this guide by including this parameter
               metadata: {
                 listingId: listingObj.id,

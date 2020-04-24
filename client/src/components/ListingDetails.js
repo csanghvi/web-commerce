@@ -6,8 +6,9 @@ import { Link, Redirect } from "react-router-dom";
 import data from "../api/db.json"
 import Carousel from "./Carousel"
 import apiClient from "../api/apiClient"
-import { Input } from "semantic-ui-react"
+import { Rail, Segment, Table, Grid, Header, Image, Input } from "semantic-ui-react"
 import DatePicker from './DatePicker'
+
 
 
 class ListingDetails extends Component {
@@ -137,42 +138,94 @@ class ListingDetails extends Component {
         <div>
             {this.renderEditOption()}
             {this.redirectAfterEdit()}
+           
             
-            <div className="ui two column grid">
-                    <div className="column"><Carousel source={source} image={image} image2={image2} legend={location}/></div>
+            <div className="ui vertically divided grid">
+                 <div class="two column row">
                     <div className="column">
-                        <div className="segment"> 
-                            <span className="heading-primary">{title} </span>
-                            <span>Event Details: {desc}.</span>
-                        </div>
-                        <div className="segment"> 
-                            <div className="listing--date"> 
-                                <p style={{marginTop:"16px"}}>
-                                    <p style={{transform:"lowercase"}}>Event organized by <span style={{color:"black", fontStyle:"italic", padding:"8px"}}>{creator} </span></p>
-                                    <p> Price: <span style={{color:"black", fontStyle:"italic", padding:"8px"}}> {price} </span>$ per person</p>
-                                    <p> Event Date: <span style={{color:"black", fontStyle:"italic", padding:"8px"}}> 10th May </span></p>
+                        <Carousel source={source} image={source} image2={source} legend={location}/>
+                    </div>
+                    <div className="column" style={{marginTop:'50px'}}>
+                        <Segment>
+                        <Table basic='very' celled collapsing>
+                        <Table.Header>
+                            <Table.Row>
+                                <Table.HeaderCell colSpan='2'>{title}</Table.HeaderCell>
+                            </Table.Row>
+                            <Table.Row>
+                                <Table.Cell colSpan='2'>{desc}</Table.Cell>
+                            </Table.Row>
+                            </Table.Header>
 
-                                </p>
-                            </div>
-
-                        </div>
-                        {this.props.isSignedIn &&
-                        <div className="segment">
-                            <div >
-                                <span style={{fontSize:"1.4rem", fontWeight:"900"}}>Enter quantity: </span>
-                                <Input type="number" min="0" max={maxQty} id="quantity"  value={this.state.selectedQuantity}  onChange={this.handleQuantityChange} style={{width:"50px", color:"black",marginLeft:"8px"}}/>
-                                <span style={{fontSize:"1.4rem", fontWeight:"900", marginLeft:"16px"}}>Select Date: </span>
-                                <DatePicker handleChangeDate={this.handleChangeDate} type={"basic"}/>
-                                <p style={{fontSize:"1.4rem", fontWeight:"900", marginTop:"16px"}} disabled={!(this.state.amount>0)}>Total cost: <span style={{color:"blueviolet", padding:"16px"}}>${this.state.amount}</span></p>
-                            </div>
-                        </div>}
+                            <Table.Body>
+                            <Table.Row>
+                                <Table.Cell>
+                                <Header as='h4' image>
+                                    <Header.Content>
+                                        Event organized by
+                                    </Header.Content>
+                                </Header>
+                                </Table.Cell>
+                                <Table.Cell>{creator}</Table.Cell>
+                            </Table.Row>
+                            <Table.Row>
+                                <Table.Cell>
+                                <Header as='h4' image>
+                                    <Header.Content>
+                                        Price
+                                        <Header.Subheader>per ticket</Header.Subheader>
+                                    </Header.Content>
+                                </Header>
+                                </Table.Cell>
+                                <Table.Cell>${price}</Table.Cell>
+                            </Table.Row>
+                            <Table.Row>
+                                <Table.Cell>
+                                <Header as='h4' image>
+                                    <Header.Content>
+                                        Enter quantity
+                                    </Header.Content>
+                                </Header>
+                                </Table.Cell>
+                                <Table.Cell>        <Input type="number" min="0" max={maxQty} id="quantity"  value={this.state.selectedQuantity}  onChange={this.handleQuantityChange} style={{width:"50px", color:"black",marginLeft:"8px"}}/>
+                                </Table.Cell>
+                            </Table.Row>
+                            <Table.Row>
+                                <Table.Cell>
+                                <Header as='h4' image>
+                                    <Header.Content>
+                                        Select Date
+                                    </Header.Content>
+                                </Header>
+                                </Table.Cell>
+                                <Table.Cell>       
+                                     <DatePicker handleChangeDate={this.handleChangeDate} type={"basic"}/>
+                                </Table.Cell>
+                            </Table.Row>
+                            <Table.Row disabled={!(this.state.amount>0)}>
+                                <Table.Cell>
+                                <Header as='h4' image>
+                                    <Header.Content>
+                                        Total Cost
+                                    </Header.Content>
+                                </Header>
+                                </Table.Cell>
+                                <Table.Cell>       
+                                    <span style={{color:"blueviolet", padding:"16px"}}>${this.state.amount}</span>
+                                </Table.Cell>
+                            </Table.Row>
+                            </Table.Body>
+                        </Table>
                         <div className="segment">
                             {this.props.isSignedIn ? this.props.id ?
-                             <TicketsModal id={this.props.id.id} selectedQuantity={this.state.selectedQuantity} totalAmount={this.state.amount} selectedDate={this.state.date}/> : null
-                             :
+                            <TicketsModal buyer={this.props.currentUserObj.email} id={this.props.id.id} selectedQuantity={this.state.selectedQuantity} totalAmount={this.state.amount} selectedDate={this.state.date}/> : null
+                            :
                             <button className="btn btn-half" onClick={this.setComeBackUrl}><Link to = '/login' style={{color:"black"}}>Login to buy tickets</Link></button> }
                         </div>
+                        </Segment>
                     </div>
+
+                 </div>
             </div>
 
         </div>
