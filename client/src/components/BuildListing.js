@@ -1,9 +1,10 @@
 import React, { Component, useState } from 'react'
 import axiosApi from '../api/axiosApi'
-import { Menu, Dropdown, Grid } from 'semantic-ui-react'
+import { Menu, Dropdown, Grid, Segment, Button } from 'semantic-ui-react'
 import DatePicker from './DatePicker'
 import apiClient from '../api/apiClient'
 import data from "../api/db.json"
+import _ from 'lodash'
 
 function validate (state) {
   // we are going to store errors for all fields
@@ -65,7 +66,9 @@ export default class BuildListing extends Component {
       endDate:'',
       location:'',
       price:0,
-      maxQty:2
+      maxQty:2,
+      addListing:false,
+      allListings:[]
     }
   }
 
@@ -172,13 +175,29 @@ export default class BuildListing extends Component {
           images: rsp.images,
           location: rsp.location,
           price:rsp.price,
-          maxQty:rsp.maxQty
+          maxQty:rsp.maxQty,
+          addListing:true
         })
        })
        .catch(err => {
          console.log("err in getting a listing with id %o", id)
        })
-    } 
+    } else {
+      const filter = {
+        location: '',
+        startDate: '',
+        endDate:  '', 
+        email:  ''
+      }
+      console.log("Filter is %o", filter)
+      apiClient.getAllListings(filter)
+      .then(rsp => {
+        console.log("All listings are %o", rsp)
+       this.setState({
+         allListings:rsp
+        })
+      })
+    }
   }
 
   handleSubmit (e) {
@@ -268,7 +287,144 @@ export default class BuildListing extends Component {
     }
   }
 
+  setAddListing = () => {
+    this.setState({
+      addListing:true
+    })
+  }
+
+  claimListing = (e, {value}) => {
+    console.log('Value is %o', value)
+    apiClient.claimListing(value)
+    .then(res => {
+      this.setState({ result: 'Successfully added listing' })
+    }).catch(error => {
+      console.log('Failed to add listing %o', error)
+      this.setState({ result: `Listing Failed ${error}` })
+    })
+
+  }
+
+  renderListingForm = () => (
+    <Grid container>
+    <Grid.Row>
+       <Grid.Column width={4} textAlign='right'>
+         <label><strong>Title: </strong> </label>
+       </Grid.Column>
+       <Grid.Column width={12}>
+
+         <input
+           type='text'
+           className='form-control'
+           value={this.state.title}
+           onChange={this.handleChangeTitle}
+           style={{width:"50%"}}
+         />
+       </Grid.Column>
+     </Grid.Row>
+     <Grid.Row>
+       <Grid.Column width={4} textAlign='right'>
+         <label><strong>Details: </strong> </label>
+       </Grid.Column>
+       <Grid.Column width={12}>
+
+         <textarea
+           className='form-control'
+           value={this.state.details}
+           placeholder='Description'
+           cols={40}
+           rows={10}
+           onChange={this.handleChangeDetails}
+         />
+       </Grid.Column>
+     </Grid.Row>
+     <Grid.Row>
+       <Grid.Column width={4} textAlign='right'>
+         <label><strong>Price: </strong> </label>
+       </Grid.Column>
+       <Grid.Column width={12}>
+
+         <input
+           type='number'
+           className='form-control'
+           value={this.state.price}
+           onChange={this.handleChangePrice}
+           style={{width:"2%"}}
+         /> per item
+       </Grid.Column>
+     </Grid.Row>
+     <Grid.Row>
+       <Grid.Column width={4} textAlign='right'>
+         <label><strong>Max Quantity: </strong> </label>
+       </Grid.Column>
+       <Grid.Column width={12}>
+
+         <input
+           type='number'
+           className='form-control'
+           value={this.state.maxQty}
+           onChange={this.handleChangeMaxQty}
+           style={{width:"10%"}}
+         />
+       </Grid.Column>
+     </Grid.Row>
+     <Grid.Row>
+       <Grid.Column width={4} textAlign='right'>
+         <label><strong>Dates:</strong> </label>
+       </Grid.Column>
+       <Grid.Column width={12}>
+         <Menu compact>
+           <DatePicker handleChangeDate={this.handleChangeDate} type={"range"}/>
+         </Menu>
+       </Grid.Column>
+     </Grid.Row>
+     <Grid.Row>
+       <Grid.Column width={4} textAlign='right'>
+         <label><strong>Location:</strong> </label>
+       </Grid.Column>
+       <Grid.Column width={12}>
+         <input
+           type='text'
+           className='form-control'
+           value={this.state.location}
+           onChange={this.handleChangeLocation}
+           placeholder="Comma separated list of cities"
+           style={{width:"50%"}}
+         />
+       </Grid.Column>
+     </Grid.Row>
+     <Grid.Row>
+       <Grid.Column width={4} textAlign='right'>
+         <label><strong>Helpful Image URLs: </strong> </label>
+       </Grid.Column>
+       <Grid.Column width={12}>
+           <div>
+             {this.renderImageCollection()}
+           </div>
+          <div className="add-new-images"> <button><i className="plus icon" onClick={this.addNewImage}></i></button></div>
+       </Grid.Column>
+     </Grid.Row>
+   </Grid>
+
+  )
+
   render () {
+    if (!Object.prototype.hasOwnProperty.call(this.props, 'id')) {
+      console.log('Email received in props is %o', this.props.email)
+      var listingOptions = this.state.allListings.map((listing, index) => ({
+                            key: index,
+                            text: listing.title,
+                            value: listing._id,
+                            email: listing.email
+                            }))
+                            .filter(item => {
+                              
+                              if (item.email !== this.props.email){
+                                return item
+                              }
+                            })
+      
+    }
     return (
       <div style={{ marginTop: 10 }}>
           {this.state.errors.map((error, index) => (
@@ -279,107 +435,18 @@ export default class BuildListing extends Component {
           {this.state.result.length > 0 && this.state.result.includes('Fail') &&
             <p> <strong><font color='red' size='3' key={this.state.result}>Result: {this.state.result} </font></strong></p>}
           <div className='form-group'>
-            <Grid container>
-             <Grid.Row>
-                <Grid.Column width={4} textAlign='right'>
-                  <label><strong>Title: </strong> </label>
-                </Grid.Column>
-                <Grid.Column width={12}>
-
-                  <input
-                    type='text'
-                    className='form-control'
-                    value={this.state.title}
-                    onChange={this.handleChangeTitle}
-                    style={{width:"50%"}}
-                  />
-                </Grid.Column>
-              </Grid.Row>
-              <Grid.Row>
-                <Grid.Column width={4} textAlign='right'>
-                  <label><strong>Details: </strong> </label>
-                </Grid.Column>
-                <Grid.Column width={12}>
-
-                  <textarea
-                    className='form-control'
-                    value={this.state.details}
-                    placeholder='Description'
-                    cols={40}
-                    rows={10}
-                    onChange={this.handleChangeDetails}
-                  />
-                </Grid.Column>
-              </Grid.Row>
-              <Grid.Row>
-                <Grid.Column width={4} textAlign='right'>
-                  <label><strong>Price: </strong> </label>
-                </Grid.Column>
-                <Grid.Column width={12}>
-
-                  <input
-                    type='number'
-                    className='form-control'
-                    value={this.state.price}
-                    onChange={this.handleChangePrice}
-                    style={{width:"2%"}}
-                  /> per item
-                </Grid.Column>
-              </Grid.Row>
-              <Grid.Row>
-                <Grid.Column width={4} textAlign='right'>
-                  <label><strong>Max Quantity: </strong> </label>
-                </Grid.Column>
-                <Grid.Column width={12}>
-
-                  <input
-                    type='number'
-                    className='form-control'
-                    value={this.state.maxQty}
-                    onChange={this.handleChangeMaxQty}
-                    style={{width:"10%"}}
-                  />
-                </Grid.Column>
-              </Grid.Row>
-              <Grid.Row>
-                <Grid.Column width={4} textAlign='right'>
-                  <label><strong>Dates:</strong> </label>
-                </Grid.Column>
-                <Grid.Column width={12}>
-                  <Menu compact>
-                    <DatePicker handleChangeDate={this.handleChangeDate} type={"range"}/>
-                  </Menu>
-                </Grid.Column>
-              </Grid.Row>
-              <Grid.Row>
-                <Grid.Column width={4} textAlign='right'>
-                  <label><strong>Location:</strong> </label>
-                </Grid.Column>
-                <Grid.Column width={12}>
-                  <input
-                    type='text'
-                    className='form-control'
-                    value={this.state.location}
-                    onChange={this.handleChangeLocation}
-                    placeholder="Comma separated list of cities"
-                    style={{width:"50%"}}
-                  />
-                </Grid.Column>
-              </Grid.Row>
-              <Grid.Row>
-                <Grid.Column width={4} textAlign='right'>
-                  <label><strong>Helpful Image URLs: </strong> </label>
-                </Grid.Column>
-                <Grid.Column width={12}>
-                    <div>
-                      {this.renderImageCollection()}
-                    </div>
-                   <div className="add-new-images"> <button><i className="plus icon" onClick={this.addNewImage}></i></button></div>
-                </Grid.Column>
-              </Grid.Row>
-            </Grid>
           </div>
-          {this.renderSubmitButton()}
+          {!this.state.addListing && 
+          <Segment.Group raised>
+            
+            
+            <Segment textAlign='center' style={{marginTop:'50px'}}><button onClick={this.setAddListing} className='btn btn-half'>Add a Listing</button></Segment>
+            <Segment textAlign='center' ><Dropdown placeholder='Title' clearable search selection options={listingOptions} onChange={this.claimListing}/></Segment>
+
+          </Segment.Group>
+          }
+          {this.state.addListing && this.renderListingForm() }
+          {this.state.addListing &&  this.renderSubmitButton()}
       </div>
     )
   }

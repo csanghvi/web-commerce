@@ -19,7 +19,7 @@ class ModifySettings extends Component {
           customAccountLink:'',
           isCustom: false
         };
-        this.isStripeAccount()
+        //this.isStripeAccount()
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
   
@@ -36,7 +36,7 @@ class ModifySettings extends Component {
       }
 
 
-      isStripeAccount = () => {
+      isStripeAccount = async () => {
         if (this.props.isSignedIn){
           let isStripeAccount = Object.prototype.hasOwnProperty.call(this.props.currentUserObj, "stripeAccountId") ? true : false
           if (isStripeAccount){
@@ -84,26 +84,7 @@ class ModifySettings extends Component {
 
 
       componentDidMount() {
-        /*
-          console.log("Generate a stripe dashboard link %o",this.props.currentUserObj )
-          apiClient.createLoginLink(
-            this.props.currentUserObj.stripeAccountId
-          )
-          .then(loginLink => {
-            console.log("Login link received is %o", loginLink)
-            this.setState({
-                firstName: this.props.currentUserObj.firstName,
-                lastName: this.props.currentUserObj.lastName,
-                email: this.props.currentUserObj.email,
-                loginLink: `${loginLink.data.url}#/account`,
-                error: ''
-            })
-          })
-          
-        .catch(err => {
-            console.log("Error with stripe is %o", err)
-          });
-          */
+        this.isStripeAccount()
       }
     
       render() {

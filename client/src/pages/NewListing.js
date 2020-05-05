@@ -77,7 +77,7 @@ class NewListing extends Component {
                     {this.props.isSignedIn ?
                       isConnectedAccount ?
                     <React.Fragment>
-                        <BuildListing />
+                        <BuildListing email={this.props.currentUserObj.email}/>
                     </React.Fragment>
                     : 
                     <React.Fragment>

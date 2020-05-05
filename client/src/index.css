@@ -371,23 +371,23 @@ button[disabled]:hover{
     padding: 8px;
     display: inline-block;
     width: 100%;
-    border: 2px solid #0055ff;
-    color: #0055ff;
+    border: 2px solid blueviolet;
+    color: blueviolet;
   }
   .btn-full:hover {
-    background: #0055ff;
-    border: 2px solid #0055ff;
+    background: blueviolet;
+    border: 2px solid blueviolet;
     color: #fff;
   }
 
   .btn-secondary {
     background: #fff;
-    border: 2px solid #0055ff;
-    color: #0055ff;
+    border: 2px solid blueviolet;
+    color:blueviolet;
   }
   .btn-secondary:hover {
-    background: #0055ff;
-    border: 2px solid #0055ff;
+    background:blueviolet;
+    border: 2px solid blueviolet;
     color: #fff;
   }
 
@@ -401,8 +401,8 @@ button[disabled]:hover{
     color: black;
   }
   .btn-half:hover {
-    background: #0055ff;
-    border: 2px solid #0055ff;
+    background: blueviolet;
+    border: 2px solid blueviolet;
     color: white;
   }
 

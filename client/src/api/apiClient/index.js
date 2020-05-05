@@ -1,8 +1,8 @@
 import API from "../axiosApi";
 import {loadStripe} from '@stripe/stripe-js';
 const axios = require("axios");
-const stripe = require("stripe")("sk_test_wcPqI47agQt8hXOnZRAqeeen00tGgkDtny");
-const token = "sk_test_wcPqI47agQt8hXOnZRAqeeen00tGgkDtny";
+const stripe = require("stripe")(process.env.REACT_APP_STRIPE_SECRET_KEY);
+const token = process.env.REACT_APP_STRIPE_SECRET_KEY;
 var querystring = require('querystring');
 
 
@@ -194,6 +194,20 @@ const apiClient = {
   updateListing: async function(id, data) {
     return new Promise((resolve, reject) => {
       API.post(`/api/v1/listing/edit/${id}`, data)
+        .then(rsp => {
+          resolve(rsp);
+          return;
+        })
+        .catch(error => {
+          console.log(error);
+          reject(error.message);
+          return;
+        });
+    });
+  },
+  claimListing: async function(id) {
+    return new Promise((resolve, reject) => {
+      API.post(`/api/v1/listing/claim/${id}`)
         .then(rsp => {
           resolve(rsp);
           return;

@@ -117,6 +117,28 @@ listingsRoutes.route('/all').get(function(req, res) {
     });
   });
 
+  listingsRoutes.route('/claim/:id').post(function(req, res) {
+    console.log("received a req to updat for %o", req.params.id);
+    Listings.findById(req.params.id, function(err, listing) {
+      if (!listing)
+        res.status(404).send('data is not found');
+      else{
+          const body = req.body
+          console.log("Body is %o", req.body);
+  
+          listing.email = body.email;
+
+  
+          listing.save().then(n => {
+              res.json('Listing updated');
+            })
+            .catch(err => {
+              res.status(400).send("Update not possible");
+            });
+        }
+    });
+  });
+
 
   return listingsRoutes
 }

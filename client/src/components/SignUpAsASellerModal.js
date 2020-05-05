@@ -70,7 +70,8 @@ class SignUpAsASellerModal extends React.Component {
         let redirectUri = `${process.env.REACT_APP_BASEURL}/oauth/connect` || 'http://localhost:3000/oauth/connect'
         this.state = {
            isOpen:true,
-           connectStr:`https://connect.stripe.com/express/oauth/authorize?redirect_uri=${redirectUri}&client_id=${process.env.REACT_APP_STRIPE_CLIENT_ID}&state=testing&suggested_capabilities[]=card_payments&stripe_user[email]=${this.props.currentUserObj.email}&stripe_user[business_type]=individual`,
+           connectStr:`https://connect.stripe.com/express/oauth/authorize?redirect_uri=${redirectUri}&client_id=${process.env.REACT_APP_STRIPE_CLIENT_ID}&state=testing&suggested_capabilities[]=transfers&stripe_user[email]=${this.props.currentUserObj.email}&stripe_user[business_type]=individual&stripe_user[country]=US&stripe_user[first_name]=${this.props.currentUserObj.firstName}&stripe_user[last_name]=${this.props.currentUserObj.lastName}&stripe_user[phone_number]=0000000000&stripe_user[product_description]
+='Collecting Payouts for Unemployment'`,
            isCustom:  accountType,
            customConnectStr: ''
         }

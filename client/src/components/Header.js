@@ -46,7 +46,8 @@ class Header extends Component{
                 </React.Fragment>
                 :  
                 <React.Fragment>
-                  <li className='navigation_list'><Link to='/plans'> <Icon name='payment' /></Link></li>
+                  {//<li className='navigation_list'><Link to='/plans'> <Icon name='payment' /></Link></li>
+                  }
                   <li className='navigation_list'><Link to='/listings/new'> <Icon name='plus' /></Link></li>
                 </React.Fragment>}
             </ul>

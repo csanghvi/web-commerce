@@ -7,6 +7,7 @@ import { signIn, signOut, accountSignIn } from "../actions";
 import expressAccountUpdate from '../img/expressAccountUpdate.png'
 import HeaderComp from "../components/Header"
 import {Segment, Image, Button} from 'semantic-ui-react'
+import expressOauthCode from '../img/express-oauth-code.png'
 
 
 class OauthConnect extends Component {
@@ -33,10 +34,15 @@ class OauthConnect extends Component {
       }
       renderExpressApiUpdate = () =>{
         return (
+          <div>
           <Segment placeholder compact textAlign='center'>
+            <Image src={expressOauthCode} />
+            </Segment>
+            <Segment placeholder compact textAlign='center'>
             <Image src={expressAccountUpdate} />
             <Button primary onClick={this.redirectToListing} style={{marginTop:'20px'}}> Continue Ahead </Button>
         </Segment>
+        </div>
         )
       }
 
