@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Dropdown, Button } from "semantic-ui-react"
+import { Form, Dropdown, Button, Popup, Grid, Image } from "semantic-ui-react"
 import {
   CardElement,
   Elements,
@@ -9,7 +9,24 @@ import {
 import { connect } from 'react-redux';
 import { signIn, signOut, setRelayUrl } from "../actions";
 import apiClient from '../api/apiClient'
+import confirmElements from '../img/confirmcard_elements.png'
+import confirmPM from '../img/confirmcard_pm.png'
 
+
+const PopupSubmitPayment = (props) => (
+  <Popup trigger={<Button onClick={props.handleSubmit} style={{background:'blueviolet', color:'white'}} className="btn btn-full"><span id="button-text">Submit Payment</span></Button>} 
+ wide='very' basic hoverable position='bottom right' style={{marginTop:'250px', marginRight:'200px'}}>
+    <Grid centered divided columns={1}>
+      <Grid.Column textAlign='center'>
+          {!props.existing ? 
+          <Image src={confirmElements}></Image>
+          :
+          <Image src={confirmPM}></Image>
+          }
+      </Grid.Column>
+    </Grid>
+  </Popup>
+)
 
 
 const couponOptions = [
@@ -72,7 +89,8 @@ const CheckoutForm = (props) => {
           listingId: props.id,
           quantity: props.quantity,
           amount: props.totalAmount,
-          selectedDate: props.selectedDate
+          selectedDate: props.selectedDate,
+          insurance:props.insurance
         })
         .then(res => {
           console.log("Res of createPaymentIntent %o", res);
@@ -288,20 +306,20 @@ const renderLegalText = () => {
   }
 }
 const renderSubmitOrSpinner = () => {
+  let existingVal = false 
+  if (paymentOption === 'existing')
+    existingVal = true
+
   if (processing) {
     return (
       <Button loading style={{background:'blueviolet', color:'white'}} className="btn btn-full"><span id="button-text">Submit Payment</span></Button>
     )
   } else {
     return (
-    <Button onClick={handleSubmit} style={{background:'blueviolet', color:'white'}} className="btn btn-full"><span id="button-text">Submit Payment</span></Button>
+    <PopupSubmitPayment handleSubmit={handleSubmit} existing={existingVal}/>
     )
   }
 
-}
-const handlePaymentOption = (e) => {
-  console.log("Value of radio button clicked is %o", e.target.value)
-  setPaymentOption(e.target.value)
 }
 
 const displayPaymentOptions = () =>{

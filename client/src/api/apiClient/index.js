@@ -317,14 +317,16 @@ const apiClient = {
         });
     });
   },
-  fetchBalanceTransactions: async function(stripeAccountId) {
+  fetchBalanceTransactions: async function(stripeAccountId, payoutId='') {
     return new Promise((resolve, reject) => {
       // asynchronously called
       console.log("Calling stripeAccountID %o", stripeAccountId);
       const config = {
         headers: { Authorization: `Bearer ${token}` , "Stripe-Account": stripeAccountId}
        };
-      axios.get(`https://api.stripe.com/v1/balance_transactions`, config)
+      var url = 'https://api.stripe.com/v1/balance_transactions'
+      var queryParam = payoutId ? `?payout=${payoutId}` : ''
+      axios.get(`https://api.stripe.com/v1/balance_transactions${queryParam}`, config)
         .then(rsp => {
           console.log("Returning response after making stripe call to fetch charges %o", rsp);
           resolve(rsp.data.data);
@@ -345,6 +347,23 @@ const apiClient = {
         .then(rsp => {
           console.log("Returning response after making stripe call to fetch charges %o", rsp);
           resolve(rsp.data);
+        })
+        .catch(err => {
+          console.log("Error received from server is %o", err)
+        });
+    });
+  },
+  fetchPayoutList: async function(stripeAccountId) {
+    return new Promise((resolve, reject) => {
+      // asynchronously called
+      console.log("Calling stripeAccountID %o", stripeAccountId);
+      const config = {
+        headers: { Authorization: `Bearer ${token}` , "Stripe-Account": stripeAccountId}
+       };
+      axios.get(`https://api.stripe.com/v1/payouts?expand[]=data.destination`, config)
+        .then(rsp => {
+          console.log("Returning response after making stripe call to fetch charges %o", rsp);
+          resolve(rsp.data.data);
         })
         .catch(err => {
           console.log("Error received from server is %o", err)

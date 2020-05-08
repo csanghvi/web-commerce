@@ -4,10 +4,11 @@ import Modal from 'react-modal';
 import Checkout from './Checkout'
 import {Elements} from '@stripe/react-stripe-js';
 import {loadStripe} from '@stripe/stripe-js';
-
+import {Popup, Grid, Image} from 'semantic-ui-react'
 import apiClient from '../api/apiClient'
 import Stripe from 'stripe';
-import Popup from './Popup.js'
+import PopupPI from './Popup.js'
+import checkoutSession from '../img/checkout-session.png'
 
 const stripePromise = loadStripe('pk_test_XvODp9OF6PFNt7Yka7dieFYp00MTqbXTDK')
 const stripe = window.Stripe('pk_test_XvODp9OF6PFNt7Yka7dieFYp00MTqbXTDK')
@@ -25,6 +26,17 @@ const customStyles = {
     
   }
 };
+
+const PopupCheckOutRedirect = (props) => (
+  <Popup trigger={<button onClick={props.initiateCheckout} className="btn btn-half" disabled={!(props.selectedQuantity > 0)}>Use stripe checkout</button>} 
+ wide='very' basic hoverable position='bottom right' style={{marginTop:'100px', marginRight:'200px'}}>
+    <Grid centered divided columns={1}>
+      <Grid.Column textAlign='center'>
+          <Image src={checkoutSession}></Image>
+      </Grid.Column>
+    </Grid>
+  </Popup>
+)
 
 class TicketsModal extends React.Component {
   constructor(props) {
@@ -142,7 +154,7 @@ class TicketsModal extends React.Component {
       </React.Fragment>
        : 
       <React.Fragment>
-         <Popup openModal={this.openModal} selectedQuantity={this.props.selectedQuantity}/>          
+         <PopupPI openModal={this.openModal} selectedQuantity={this.props.selectedQuantity}/>          
           <Modal
             appElement={document.querySelector('#app')}
             isOpen={this.state.isOpen}
@@ -153,11 +165,12 @@ class TicketsModal extends React.Component {
           >
             {this.state.isOpen &&
               <Elements stripe={stripePromise}>
-                <Checkout id={this.props.id} setPaymentIntent={this.setPaymentIntent} paymentResult={this.paymentResult} totalAmount={this.props.totalAmount} quantity={this.props.selectedQuantity} selectedDate={this.props.selectedDate}/>
+                <Checkout insurance={this.props.insurance} id={this.props.id} setPaymentIntent={this.setPaymentIntent} paymentResult={this.paymentResult} totalAmount={this.props.totalAmount} quantity={this.props.selectedQuantity} selectedDate={this.props.selectedDate}/>
               </Elements>
             }
           </Modal>
-          <button onClick={this.initiateCheckout} className="btn btn-half" disabled={!(this.props.selectedQuantity > 0)}>Use stripe checkout</button>
+          
+          <PopupCheckOutRedirect initiateCheckout={this.initiateCheckout} selectedQuantity={this.props.selectedQuantity}/> 
         </React.Fragment> 
         }
       </div>

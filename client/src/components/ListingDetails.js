@@ -6,7 +6,7 @@ import { Link, Redirect } from "react-router-dom";
 import data from "../api/db.json"
 import Carousel from "./Carousel"
 import apiClient from "../api/apiClient"
-import { Rail, Segment, Table, Grid, Header, Image, Input } from "semantic-ui-react"
+import { Checkbox, Rail, Segment, Table, Grid, Header, Image, Input } from "semantic-ui-react"
 import DatePicker from './DatePicker'
 
 
@@ -20,7 +20,8 @@ class ListingDetails extends Component {
              readyForEdit:false,
              selectedQuantity:0,
              amount:0,
-             date:''
+             date:'',
+             insurance: false
         }
     }
 
@@ -70,6 +71,24 @@ class ListingDetails extends Component {
         this.setState({
           date:timeStamp
         })
+    }
+
+    handleChange = () => {
+        console.log('Insurance is %o', this.state.insurance)
+        if (!this.state.insurance){
+            let totalAmount = Number(this.state.listing.price)*Number(this.state.selectedQuantity) + 10*Number(this.state.selectedQuantity)
+            this.setState({
+                amount:totalAmount
+            })
+        } else {
+            let totalAmount = Number(this.state.listing.price)*Number(this.state.selectedQuantity)
+            this.setState({
+                amount:totalAmount
+            })
+        }
+        this.setState(({ insurance }) => ({
+            insurance: !insurance
+        }))
     }
 
     handleQuantityChange = (e) => {
@@ -206,6 +225,23 @@ class ListingDetails extends Component {
                                 <Table.Cell>
                                 <Header as='h4' image>
                                     <Header.Content>
+                                        Buy Insurance
+                                    </Header.Content>
+                                    <Header.Subheader>10$ per ticket</Header.Subheader>
+                                </Header>
+                                </Table.Cell>
+                                <Table.Cell>       
+                                <Checkbox
+                                    checked={this.state.insurance}
+                                    id='suir-checkbox'
+                                    onChange={this.handleChange}
+                                />
+                                </Table.Cell>
+                            </Table.Row>
+                            <Table.Row disabled={!(this.state.amount>0)}>
+                                <Table.Cell>
+                                <Header as='h4' image>
+                                    <Header.Content>
                                         Total Cost
                                     </Header.Content>
                                 </Header>
@@ -218,9 +254,9 @@ class ListingDetails extends Component {
                         </Table>
                         <div className="segment">
                             {this.props.isSignedIn ? this.props.id ?
-                            <TicketsModal buyer={this.props.currentUserObj.email} id={this.props.id.id} selectedQuantity={this.state.selectedQuantity} totalAmount={this.state.amount} selectedDate={this.state.date}/> : null
+                            <TicketsModal buyer={this.props.currentUserObj.email} id={this.props.id.id} insurance={this.state.insurance} selectedQuantity={this.state.selectedQuantity} totalAmount={this.state.amount} selectedDate={this.state.date}/> : null
                             :
-                            <button className="btn btn-half" onClick={this.setComeBackUrl}><Link to = '/login' style={{color:"black"}}>Login to buy tickets</Link></button> }
+                            <Link to = '/login' style={{color:"black"}}><button className="btn btn-half" onClick={this.setComeBackUrl}>Login to buy tickets</button> </Link>}
                         </div>
                         </Segment>
                     </div>

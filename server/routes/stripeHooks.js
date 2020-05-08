@@ -57,26 +57,54 @@ module.exports = app => {
       // Fulfill any orders, e-mail receipts, etc
       // To cancel the payment after capture you will need to issue a Refund (https://stripe.com/docs/api/refunds)
       console.log("💰 Payment captured! %o", data.object);
-
+      var order = {
+        listingId: data.object.metadata.listingId,
+        listingTitle: data.object.metadata.listingTitle,
+        stripeBuyer: data.object.stripeCustomer,
+        dateOfPurchase: data.object.created,
+        amount: data.object.amount,
+        qty: data.object.metadata.qty,
+        email: data.object.metadata.userEmail,
+        selectedDate: data.object.metadata.selectedDate,
+        insurance: data.object.metadata.type === 'sct' ? true : false
+      };
+      
       if (
         Object.prototype.hasOwnProperty.call(data.object, "transfer_data") &&
         data.object.transfer_data !== null
       ) {
-        let order = {
-          listingId: data.object.metadata.listingId,
-          listingTitle: data.object.metadata.listingTitle,
-          stripeBuyer: data.object.stripeCustomer,
-          stripeSeller: data.object.transfer_data.destination,
-          dateOfPurchase: data.object.created,
-          amount: data.object.amount,
-          qty: data.object.metadata.qty,
-          email: data.object.metadata.userEmail,
-          selectedDate: data.object.metadata.selectedDate
-        };
-        let orderObj = new Orders(order);
-        await orderObj.save();
+        order.stripeSeller = data.object.transfer_data.destination
+      }
 
-        /**
+        let orderObj = new Orders(order);
+        orderObj.save()
+        .then (async ord => {
+          console.log('Order id is %o', ord._id)
+          if (data.object.metadata.type === 'sct') {
+            await stripe.paymentIntents.update(
+              data.object.id,
+              {transfer_group: ord._id.toString()}
+            );
+            let transferAmount = Number.parseFloat((data.object.amount/100 - 10*data.object.metadata.qty) - (0.05 * data.object.amount/100)).toFixed(2)
+            console.log("Calculated Amount is %o", transferAmount)
+            var xferObj = await stripe.transfers.create(
+              {
+                amount: transferAmount*100,
+                currency: 'usd',
+                destination: data.object.metadata.sellerStripeId,
+                transfer_group: ord._id.toString(),
+                metadata: data.object.metadata
+              }
+            );
+            const updateMetadata = await stripe.charges.update(
+              xferObj.destination_payment,
+              {metadata: data.object.metadata},
+              {stripeAccount: xferObj.destination}
+            );
+            console.log('Successfully added metadata')
+            
+        } else {
+                  /**
          * Today, when you create a Destination charge, whether using the Charges API or the PaymentIntents API, 
          * the metadata you set on the platform will not propagate to the connected account's charge. 
          * This is expected behavior as we treat this information as private to the platform. 
@@ -94,13 +122,11 @@ module.exports = app => {
           {stripeAccount: chargeObj.transfer.destination}
         );
         console.log('Successfully added metadata')
+        }
 
 
-
-
-
-      }
-    } else if (eventType === "payment_intent.payment_failed") {
+        })
+      } else if (eventType === "payment_intent.payment_failed") {
       console.log("❌ Payment failed.");
     }
     res.sendStatus(200);

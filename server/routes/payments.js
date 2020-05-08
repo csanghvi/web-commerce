@@ -156,25 +156,38 @@ module.exports = app => {
             /*
             Creat Payment Intent
             */
-            const paymentIntent = await stripe.paymentIntents.create({
-              amount: Number(data.amount*100),
-              currency: "usd",
-              customer: data.stripeCustomerId,
-              application_fee_amount: Number(data.amount*100*0.05),
-              statement_descriptor_suffix:sellerObj.email,
-              transfer_data: {
-                destination: sellerObj.stripeAccountId,
-              },
-              //on_behalf_of: sellerObj.stripeAccountId,
-              // Verify your integration in this guide by including this parameter
-              metadata: {
-                listingId: listingObj.id,
-                listingTitle: listingObj.title,
-                qty: data.listingQty,
-                userEmail: user.email,
-                selectedDate: data.selectedDate
-              }
-            });
+           var piObject = {
+            amount: Number(data.amount*100),
+            currency: "usd",
+            customer: data.stripeCustomerId,
+            
+            statement_descriptor_suffix:sellerObj.email,
+            //on_behalf_of: sellerObj.stripeAccountId,
+            // Verify your integration in this guide by including this parameter
+            metadata: {
+              listingId: listingObj.id,
+              listingTitle: listingObj.title,
+              qty: data.quantity,
+              userEmail: user.email,
+              selectedDate: data.selectedDate,
+              type: 'destination',
+              sellerStripeId: sellerObj.stripeAccountId
+            }
+
+           }
+           
+           if (data.insurance){
+             piObject['metadata']['type'] = 'sct'
+             //piObject['transfer_group'] = ''
+           } else {
+            piObject['transfer_data'] = {}
+            piObject['transfer_data']['destination'] = sellerObj.stripeAccountId
+            piObject['application_fee_amount'] = Number(data.amount*100*0.05)
+
+           }
+            const paymentIntent = await stripe.paymentIntents.create(
+              piObject
+            );
 
             console.log("paymentIntent Obj is %o" ,paymentIntent.client_secret)
 
@@ -219,7 +232,9 @@ module.exports = app => {
             listingTitle: listingObj.title,
             qty: data.quantity,
             userEmail: userObj.email,
-            selectedDate: data.selectedDate
+            selectedDate: data.selectedDate,
+            sellerStripeId: sellerObj.stripeAccountId
+
           }
         },
         line_items: [

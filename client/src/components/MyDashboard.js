@@ -31,6 +31,7 @@ const PopupRefund = (props) => {
       var sendPayout = (e,data) => {
         console.log('Amount of payout is %o & stripe account id is %o', data.value, props.stripeAccountId)
         apiClient
+        
         .sendPayout(data.value, props.stripeAccountId)
         .then(res => {
             
@@ -59,7 +60,7 @@ const PopupOptions = (props) => (
             }
         </Grid.Column>
         <Grid.Column textAlign='center'>
-        <Header as='h4'>Force Payout</Header>
+        <Header as='h4'>Send Payout</Header>
           <PopupPayout amount={props.amount} stripeAccountId={props.stripeAccountId}/>
         </Grid.Column>
       </Grid>
@@ -75,7 +76,8 @@ class MyDashboard extends Component {
              totalVolume:0,
              netVolume:0,
              availableBalance:0,
-             pendingBalance:0
+             pendingBalance:0,
+             payouts:[]
         }
     }
 
@@ -122,6 +124,13 @@ class MyDashboard extends Component {
             })
             
         })
+        apiClient.fetchPayoutList(this.props.currentUserObj.stripeAccountId)
+        .then(payouts => {
+            this.setState({
+                payouts:payouts
+            })
+            
+        })
     }
 
     selectOrderAction = (e,data) => {
@@ -131,6 +140,32 @@ class MyDashboard extends Component {
         .then(res => {
             this.setState(this.state)
         })
+
+    }
+
+    renderPayoutsTable = () => {
+        const payouts = this.state.payouts;
+        var payoutItems
+        if (payouts){
+            payoutItems = payouts.map(payout => {
+                var date = new Date(payout.created*1000)
+                var day = date.getDate();
+                var month = date.getMonth();
+                var year = date.getFullYear();
+                var fullDate = (month+1) + "/" +(day) + "/" + year
+                return (
+                    <React.Fragment key={payout.id}>
+                        <Table.Row key={payout.id}>
+                            <Table.Cell width="6"><a style={{color:'blue'}} href={`/`}>{payout.id}</a></Table.Cell>
+                            <Table.Cell width="6">{payout.destination.bank_name}</Table.Cell>
+                            <Table.Cell width="2">${Number.parseFloat(payout.amount/100).toFixed(2)}</Table.Cell>
+                            <Table.Cell textAlign='right' width="2"> {fullDate}</Table.Cell>                
+                        </Table.Row>
+                  </React.Fragment>
+                 )
+            })
+        }
+        return payoutItems
 
     }
     renderChargesTable = () =>{
@@ -143,7 +178,7 @@ class MyDashboard extends Component {
                 var day = date.getDate();
                 var month = date.getMonth();
                 var year = date.getFullYear();
-                var fullDate = day + "-" +(month + 1) + "-" + year
+                var fullDate = (month + 1) + "/" +day + "/" + year
                 var eventDate
                 var eventTitle
                 var eventId
@@ -212,14 +247,32 @@ class MyDashboard extends Component {
                         <Segment placeholder>
                                  <Header as='h3' textAlign={"justified"}>
                                     <Icon name='dollar' />
-                                    <Header.Content>Available Balance : ${this.state.availableBalance}</Header.Content><n/>
+                                    <Header.Content>Available Balance : ${this.state.availableBalance}</Header.Content><br/>
                                     <Icon name='dollar' />
                                     <Header.Content>Pending Balance: ${this.state.pendingBalance}</Header.Content>
                                  </Header>
-                            </Segment>                        </Grid.Column>
+                            </Segment>                        
+                        </Grid.Column>
                     </Grid.Row>
                     <Grid.Row >
                         <Grid.Column >
+                        <label className='heading-tertiary' style={{color:'blue'}}><Icon name='dollar' color='blue'/>Payout Details</label>
+                                <Table striped color="blue" key="blue">
+                                    <Table.Header>
+                                        <Table.Row>
+                                            <Table.HeaderCell width="6">Transfer Id</Table.HeaderCell>
+                                            <Table.HeaderCell width="6">Destination</Table.HeaderCell>
+                                            <Table.HeaderCell width="2">Amount</Table.HeaderCell>
+                                            <Table.HeaderCell width="2">Date</Table.HeaderCell>
+                                        </Table.Row>
+                                    </Table.Header>
+                                    <Table.Body>{this.renderPayoutsTable()}</Table.Body>
+                                </Table>
+                        </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row >
+                        <Grid.Column >
+                        <label className='heading-tertiary' style={{color:'red'}}><Icon name='dollar' color='red'/>Charge Details</label>
                                 <Table striped color="red" key="red">
                                     <Table.Header>
                                         <Table.Row>

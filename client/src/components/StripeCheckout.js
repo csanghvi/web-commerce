@@ -2,13 +2,16 @@ import React, { Component } from 'react'
 import * as qs from 'query-string';
 import apiClient from '../api/apiClient';
 import { Router, Link } from 'react-router-dom';
+import { Grid, Image, Header,Segment, Icon} from "semantic-ui-react"
+
 
 
 export default class StripeCheckout extends Component {
     constructor(props) {
         super(props)
         this.state = {
-             sessionJSON: ""
+             sessionJSON: "",
+             image:''
         }
     }
     
@@ -19,9 +22,10 @@ export default class StripeCheckout extends Component {
             apiClient.getCheckoutSession(this.props.sessionId.session_id)
             .then(function(response){
                 console.log('Session is %o', response)
-              var sessionJSON = JSON.stringify(response.data.session, null, 2);
+              var sessionJSON = JSON.stringify(response.data.session, null, 4);
               currentComponent.setState({
-                  sessionJSON:sessionJSON
+                  sessionJSON:sessionJSON,
+                  image:response.data.session.display_items[0].custom.images[0]
               })
             })
             .catch(function(err){
@@ -32,41 +36,25 @@ export default class StripeCheckout extends Component {
     render() {
 
         return (
-            <div className="ui two column grid">
-                <div className="column centered">
-                    <h1>Your payment succeeded</h1>
-                    <h4>
-                        View CheckoutSession response:
-                    </h4>
-                    <div class="sr-section completed-view">
-                        <div class="eco-callout">
-                            <div>
-                                {this.state.sessionJSON}
-                            </div>
-                        </div>
-                        <button className="btn btn--full"><Link to='/listings'>Return to ticket purchase</Link></button>
-                    </div> 
-                </div>
-                <div class="column centered">
-                    <div class="pasha-image-stack">
-                        <img
-                        src="https://images.pexels.com/photos/2283996/pexels-photo-2283996.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
-                        width="275"
-                        height="185"
+            <Grid divided='vertically' centered columns={2}>
+              <Grid.Row columns={2}>
+                  <Grid.Column>
+                       <Segment placeholder>
+                           <Header as='h2' textAlign={"center"}>
+                              <Icon name='checkmark' color='green'/>
+                              <Header.Content style={{color:'green'}}>Payment Succeeded</Header.Content><br/>
+                           </Header>
+                           {this.state.sessionJSON}
+                           <Link to='/listings'><button className="btn btn-half" style={{textAlign:'center'}}>Return to listings</button></Link>
+                      </Segment>
+                  </Grid.Column>
+                  <Grid.Column>
+                     <Image
+                        src={this.state.image}
                         />
-                        <img
-                        src="https://images.pexels.com/photos/2283996/pexels-photo-2283996.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
-                        width="275"
-                        height="185"
-                        />
-                        <img
-                        src="https://images.pexels.com/photos/2283996/pexels-photo-2283996.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
-                        width="275"
-                        height="185"
-                        />
-                    </div>
-                </div>
-            </div>
-        )
+                  </Grid.Column>
+              </Grid.Row>
+              </Grid>
+         )
     }
 }

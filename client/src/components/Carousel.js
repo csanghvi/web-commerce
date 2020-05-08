@@ -9,7 +9,7 @@ export default class ListingsCarousel extends Component {
     render() {
         return (
             <div className="carousel-banner">
-                <Carousel infiniteLoop autoPlay showThumbs>
+                <Carousel infiniteLoop>
                     <div>
                         <img src={this.props.source} />
                         <p className="legend">{this.props.legend}</p>
