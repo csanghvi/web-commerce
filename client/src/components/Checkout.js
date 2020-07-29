@@ -14,8 +14,8 @@ import confirmPM from '../img/confirmcard_pm.png'
 
 
 const PopupSubmitPayment = (props) => (
-  <Popup trigger={<Button onClick={props.handleSubmit} style={{background:'blueviolet', color:'white'}} className="btn btn-full"><span id="button-text">Submit Payment</span></Button>} 
- wide='very' basic hoverable position='bottom right' style={{marginTop:'250px', marginRight:'200px'}}>
+  <Popup trigger={<button onClick={props.handleSubmit} className="btn"><span id="button-text" style={{textAlign:'center'}}>Submit Payment</span></button>} 
+ wide='very' basic hoverable position='bottom right' style={{marginTop:'200px', marginRight:'200px'}}>
     <Grid centered divided columns={1}>
       <Grid.Column textAlign='center'>
           {!props.existing ? 
@@ -39,7 +39,7 @@ const couponOptions = [
 const CARD_ELEMENT_OPTIONS = {
     style: {
         base: {
-          iconColor: 'blueviolet',
+          iconColor: '#0038dd',
           color: 'black',
           fontWeight: 500,
           fontFamily: 'Roboto, Open Sans, Segoe UI, sans-serif',
@@ -52,7 +52,7 @@ const CARD_ELEMENT_OPTIONS = {
           borderRadius: '4px',
          
           '::placeholder': {
-            color: 'blueviolet',
+            color: '#0038dd',
           },
           padding: '1em'
         },

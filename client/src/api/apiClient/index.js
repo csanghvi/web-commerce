@@ -428,7 +428,8 @@ const apiClient = {
         account: stripeAccountId,
         failure_url:`${process.env.REACT_APP_BASEURL}/settings`,
         success_url: `${process.env.REACT_APP_BASEURL}/listings/new`,
-        type: type
+        type: type,
+        collect: 'currently_due'
        };
        console.log("Sending bodyparams as %o", bodyParameters)
       axios.post(`https://api.stripe.com/v1/account_links`, querystring.stringify(bodyParameters), config)
@@ -460,7 +461,7 @@ const apiClient = {
   createBankAccountToken: async function(params){
     return new Promise(async (resolve, reject) => {
       // asynchronously called
-      const stripe = await loadStripe('pk_test_XvODp9OF6PFNt7Yka7dieFYp00MTqbXTDK');
+      const stripe = await loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
       stripe.createToken('bank_account', {
                           country: 'US',

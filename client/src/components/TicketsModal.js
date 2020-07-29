@@ -10,8 +10,8 @@ import Stripe from 'stripe';
 import PopupPI from './Popup.js'
 import checkoutSession from '../img/checkout-session.png'
 
-const stripePromise = loadStripe('pk_test_XvODp9OF6PFNt7Yka7dieFYp00MTqbXTDK')
-const stripe = window.Stripe('pk_test_XvODp9OF6PFNt7Yka7dieFYp00MTqbXTDK')
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY)
+const stripe = window.Stripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY)
 
 const customStyles = {
   content : {
@@ -170,7 +170,6 @@ class TicketsModal extends React.Component {
             }
           </Modal>
           
-          <PopupCheckOutRedirect initiateCheckout={this.initiateCheckout} selectedQuantity={this.props.selectedQuantity}/> 
         </React.Fragment> 
         }
       </div>

@@ -20,11 +20,7 @@ import BankDetails from './pages/BankDetails'
 
 class App extends Component {
   renderSidebar() {
-    if (this.props.isSignedIn) {
-      return (
-          <UserOptions />
-      );
-    }
+
   }
   render() {
     return (

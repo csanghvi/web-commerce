@@ -25,6 +25,13 @@ class Settings extends Component {
         return (
             <div className="header_primary">
                 <Header hideSearch={true}/>
+                <div className='signin_banner'>
+                <h3 className="banner_heading">
+                      Manage Account
+                    </h3>
+                    <p className='banner_label'>
+                    <label className='supporting-text'></label></p>
+                </div>
                 <div class="signin_container">
                     {this.props.isSignedIn ?
                     <React.Fragment>

@@ -129,8 +129,7 @@ module.exports = (app) => {
                  },
                 requested_capabilities: [
                   'card_payments',
-                  'transfers',
-                  'card_issuing'
+                  'transfers'
                 ],
               })
   

@@ -26,7 +26,7 @@ class UserOptions extends Component {
   render() {
     return (
 
-        <Dropdown className='link item icon user-options' trigger={this.props.currentUserObj.email}>
+        <Dropdown className='user-options' trigger={this.props.currentUserObj.email}>
           <Dropdown.Menu className="user-options-dd">
             <Dropdown.Item className="user-options-dd" icon='user' text='Dashboard' onClick={this.redirectToProfile}/>
             <Dropdown.Item className="user-options-dd" icon='settings' text='Settings' onClick={this.redirectToSettings}/>

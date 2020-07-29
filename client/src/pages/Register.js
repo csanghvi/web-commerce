@@ -7,7 +7,12 @@ export default class Home extends Component {
         return (
             <div className="header_primary">
                 <Header hideSearch={true}/>
-                <div class="signin_container">
+                <div className='signup_banner'>
+                <h1 className="banner_heading">
+                        Sign Up
+                    </h1>
+                </div>
+                <div className="signin_container">
                         <SignUp />
                 </div>
            </div>

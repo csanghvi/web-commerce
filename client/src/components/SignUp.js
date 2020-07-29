@@ -54,14 +54,16 @@ class SignUp extends Component {
     render() {
       return (
           <div className="signup-form">
-            <div>
+            <div style={{marginTop:'80px'}}>
                 <h2 class="heading-secondary">
-                    Create an account
+                Get started in minutes
                 </h2>
+                <span style={{marginTop:'80px', marginBottom:'40px'}}></span>
             </div>
+            
             <form onSubmit={this.handleSubmit}>
               <input
-                className="new-section name form__input"
+                className="formentry"
                 type="text"
                 id="firstName"
                 name="firstName"
@@ -70,9 +72,9 @@ class SignUp extends Component {
                 onChange={this.handleChange}
                 required
               />
-  
-              <input
-                className="name form__input"
+  <p style={{marginTop:'10px'}}></p>
+                <input
+                className="name formentry"
                 type="text"
                 id="lastName"
                 name="lastName"
@@ -81,9 +83,9 @@ class SignUp extends Component {
                 onChange={this.handleChange}
                 required
               />
-  
+  <p style={{marginTop:'10px'}}></p>
               <input
-                className="email form__input"
+                className=" formentry"
                 type="email"
                 id="email"
                 name="email"
@@ -92,9 +94,9 @@ class SignUp extends Component {
                 onChange={this.handleChange}
                 required
               />
-  
-              <input
-                className="password form__input"
+  <p style={{marginTop:'10px'}}></p>              
+            <input
+                className=" formentry"
                 type="password"
                 id="password"
                 name="password"
@@ -103,8 +105,8 @@ class SignUp extends Component {
                 onChange={this.handleChange}
                 required
               />
-  
-              <button type="submit" className="btn btn-primary btn-full">
+  <p style={{marginTop:'10px'}}></p>
+                <button type="submit" className="btn btn-primary btn-full">
                 Create account
               </button>
   

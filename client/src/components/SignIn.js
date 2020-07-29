@@ -3,6 +3,7 @@ import { Component } from 'react';
 import { connect } from "react-redux";
 import { signIn, signOut, setRelayUrl } from "../actions";
 import { Redirect } from "react-router-dom";
+import { Segment } from 'semantic-ui-react';
 
 class SignIn extends Component {
     constructor(props) {
@@ -60,7 +61,7 @@ class SignIn extends Component {
         if (this.props.relayUrl){
           return <Redirect to={this.props.relayUrl} />;
         } else {
-          return <Redirect to="/profile" />;
+          return <Redirect to="/" />;
         }
       }
     }
@@ -69,23 +70,15 @@ class SignIn extends Component {
 
     render() {
         return (
-            <div className="login">
-                <div>
-                    <h2 className="heading-secondary">
-                        Sign in
-                    </h2>
-                </div>
-            <p className="supporting-text">
-              You can sign in with your own account, or use one of our demo
-              accounts.
-            </p>
+            <div>
+
             <form onSubmit={this.handleSubmit}>
               <button
                 className="btn btn-secondary btn-half"
                 onClick={this.loginAsBuyer}
                 type="button" 
               >
-                Buyer demo
+                Participant demo
               </button>
   
               <button
@@ -93,10 +86,11 @@ class SignIn extends Component {
                 onClick={this.loginAsSeller}
                 type="button" 
               >
-                Seller demo
+                Organizer demo
               </button>
+              <p style={{marginTop:'10px'}}></p>
               <input
-                className="icon-input new-section form__input"
+                className="formentry"
                 type="email"
                 id="email"
                 name="email"
@@ -104,8 +98,9 @@ class SignIn extends Component {
                 value={this.state.email}
                 onChange={this.handleChange}
               />
+              <p style={{marginTop:'10px'}}></p>
               <input
-                className="icon-input form__input"
+                className="formentry"
                 type="password"
                 id="password"
                 name="password"

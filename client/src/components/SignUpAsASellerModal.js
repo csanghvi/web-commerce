@@ -25,7 +25,7 @@ const customStyles = {
   };
 
   const PopupButtonAccountLink = (props) => (
-    <Popup trigger={<button className="btn--green" ><a className="btn--text" href={props.customConnectStr}>Lets' go custom &rarr;</a></button>} 
+    <Popup trigger={<button className="btn" ><a className="btn--text" href={props.customConnectStr}> Setup Stripe Account</a></button>} 
    wide='very' basic hoverable position='bottom right' style={{marginTop:'100px', marginRight:'200px'}}>
       <Grid centered divided columns={1}>
         <Grid.Column textAlign='center'>
@@ -36,7 +36,7 @@ const customStyles = {
   )
 
 const PopupButtonCustom = (props) => (
-  <Popup trigger={<button className="btn--green" onClick={props.setupCustomConnect} style={{marginLeft:'4px'}}>Custom</button>} 
+  <Popup trigger={<button className="btn" onClick={props.setupCustomConnect} style={{marginLeft:'4px'}}>Create StackPay Account</button>} 
     wide='very' basic hoverable position='bottom right' style={{marginTop:'100px', marginRight:'200px'}}>
     <Grid centered divided columns={1}>
       <Grid.Column textAlign='center'>
@@ -143,12 +143,11 @@ class SignUpAsASellerModal extends React.Component {
 
       renderConnectOptions = () => {
         return (
-          <div>
+          <div >
             <div style={{color:'black', textAlign:'center'}}>
             This platform uses Stripe to get you paid quickly and keep your personal and payment information secure. 
             </div>
             <div className="submit-card-button" style={{marginTop:"8px"}}>
-              <PopupButtonExpress handleExpressButton={this.handleExpressButton} connectStr={this.state.connectStr}/>
               <PopupButtonCustom setupCustomConnect={this.setupCustomConnect}/>
 
               
@@ -173,7 +172,7 @@ class SignUpAsASellerModal extends React.Component {
       render() {
         const isCustom = this.state.isCustom
         return (
-          <div>
+          <div className='new_list_popup'>
               <Modal
                 appElement={document.querySelector('#app')}
                 isOpen={this.state.isOpen}

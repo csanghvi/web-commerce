@@ -154,6 +154,7 @@ module.exports = app => {
       data = event.data;
       eventType = event.type;
       console.log("Received a hook of Type %o", event.type);
+      console.log("Data from hook is %o", data);
     } else {
       // Webhook signing is recommended, but if the secret is not configured in `config.js`,
       // we can retrieve the event data directly from the request body.

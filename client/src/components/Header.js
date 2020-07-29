@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Redirect, Link, withRouter } from "react-router-dom";
-import { Icon, Input , Form} from 'semantic-ui-react'
+import { Image, Icon, Input , Menu, Form} from 'semantic-ui-react'
 import { connect } from "react-redux";
 import { signIn, signOut } from "../actions";
-import logo from '../img/infinity.jpeg'
+import logo from '../img/stack-raise-dark-blue.png'
+import UserOptions from './UserOptions'
 
 import Logout from "./Logout";
 
@@ -13,7 +14,11 @@ import Logout from "./Logout";
 class Header extends Component{
   constructor(props) {
     super(props)
+    this.state = { activeItem: 'home' }
     }
+    
+
+    handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
   handleSearchInput = (e) => {
     console.log("Search value is %o", e.target.value)
@@ -26,31 +31,44 @@ class Header extends Component{
   }
 
   render(){
+    const { activeItem } = this.state
     return(
-        <div>
-            <ul className="navigation">
-                <span className='navigation_title'>
-                    <li><Link to = '/'><img src={logo} alt="Logo" className="logo" /></Link></li>
-                </span>
-                {!this.props.hideSearch &&
-                <span className='navigation_title' style={{marginTop:"16px"}}>
-                    <li><Form.Input icon={<Icon name='search' onClick={this.search} inverted circular link />} 
-                                    placeholder='Search events' 
-                                    onChange={this.handleSearchInput}/></li>
-                </span>
-                }
-                {!this.props.isSignedIn ?
-                <React.Fragment>
-                  <li className='navigation_list'><Link to='/register'>Sign up</Link></li>
-                  <li className='navigation_list'><Link to = '/login'>Sign in</Link></li>
-                </React.Fragment>
-                :  
-                <React.Fragment>
-                  {//<li className='navigation_list'><Link to='/plans'> <Icon name='payment' /></Link></li>
-                  }
-                  <li className='navigation_list'><Link to='/listings/new'> <Icon name='plus' /></Link></li>
-                </React.Fragment>}
-            </ul>
+        <div style={{marginTop:"40px", marginBottom:"40px", marginLeft:"120px", marginRight:'120px', fontSize:'1.5rem'}}>
+        <Menu pointing secondary >
+          <Menu.Item
+            name='HOW IT WORKS'
+            className='menunav'
+          />
+          <Menu.Item
+            name='FAQS'
+            className='menunav'
+          />
+          <Menu.Item
+            name='CONTACT'
+            className='menunav'
+          />
+          <Menu.Item>
+          <Link to='/'> 
+          <Image src={logo} alt="Logo" size="medium"/>
+          </Link>
+          </Menu.Item>
+          <Menu.Menu position='right'>
+          {!this.props.isSignedIn ?
+          <React.Fragment>
+            <Menu.Item className='menunav'><Link to='/register'>Sign up</Link></Menu.Item>
+            <Menu.Item className='menunav'><Link to = '/login'>Sign in</Link></Menu.Item>
+          </React.Fragment>
+          :  
+          <React.Fragment>
+            <Menu.Item className='menunav'><Link to='/listings/new'> Create Campaign</Link></Menu.Item>
+            <Menu.Item className='menunav'><UserOptions /></Menu.Item>
+
+             
+     
+          </React.Fragment>}
+          </Menu.Menu>
+        </Menu>
+
         </div>
 
     )

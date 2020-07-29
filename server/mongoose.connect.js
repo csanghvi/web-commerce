@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 module.exports =  () => {
   console.log('starting connection')
-  const mongoDB = 'mongodb://localhost:27017/commerce';
+  const mongoDB = process.env.MONGO_DB_URL || 'mongodb://localhost:27017/connect';
   mongoose.connect(mongoDB, {
     useNewUrlParser: true,
     useFindAndModify: false 

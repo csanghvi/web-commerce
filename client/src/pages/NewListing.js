@@ -80,7 +80,7 @@ class NewListing extends Component {
                         <BuildListing email={this.props.currentUserObj.email}/>
                     </React.Fragment>
                     : 
-                    <React.Fragment>
+                    <React.Fragment >
                       <SignUpAsASellerModal selectAccountType={this.selectAccountType}/>
                     </React.Fragment>
                     :  

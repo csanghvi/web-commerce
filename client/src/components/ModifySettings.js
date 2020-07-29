@@ -92,14 +92,15 @@ class ModifySettings extends Component {
         let payoutLink = this.state.isCustom ? '/bank-account': this.state.loginLink
         return (
             <div className="signup-form">
-              <div>
-                  <h2 class="heading-secondary">
+              <div style={{marginTop:'80px'}}>
+                  <h2 className="heading-secondary">
                       Update your account
                   </h2>
               </div>
               <form onSubmit={this.handleSubmit}>
+              <p style={{marginTop:'10px'}}></p>
                 <input
-                  className="new-section name form__input"
+                  className="formentry"
                   type="text"
                   id="firstName"
                   name="firstName"
@@ -108,9 +109,10 @@ class ModifySettings extends Component {
                   onChange={this.handleChange}
                   required
                 />
+                <p style={{marginTop:'10px'}}></p>
     
                 <input
-                  className="name form__input"
+                  className="formentry"
                   type="text"
                   id="lastName"
                   name="lastName"
@@ -119,9 +121,9 @@ class ModifySettings extends Component {
                   onChange={this.handleChange}
                   required
                 />
-    
+                <p style={{marginTop:'10px'}}></p>
                 <input
-                  className="email form__input"
+                  className="formentry"
                   type="email"
                   id="email"
                   name="email"
@@ -132,11 +134,10 @@ class ModifySettings extends Component {
                 />
     
                 <h2
-                  className="form__input"
+                  
                 ><a className="stripe-dashboard" href={redirectLink} target="_blank">Update stripe account</a>
                 </h2>
                 <h2
-                  className="form__input"
                 >
                   {this.state.isCustom ? 
                   <Link to = '/bank-account' style={{color:'green'}}> Update payout account</Link>

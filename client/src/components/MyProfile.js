@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import MyPurchases from './MyPurchases';
 import MyListings from './MyListings'
 import MyDashboard from './MyDashboard'
-import { Menu} from "semantic-ui-react";
+import { Menu, Container} from "semantic-ui-react";
 import { connect } from "react-redux";
 import { signIn, signOut } from "../actions";
 
@@ -12,7 +12,7 @@ class MyProfile extends Component {
         super(props);
         this.onChangeContentType = this.onChangeContentType.bind(this);
         this.state = {
-          contentType:'Purchases'
+          contentType:'Dashboard'
       };
     }
 
@@ -28,14 +28,13 @@ class MyProfile extends Component {
 
       render() {
         return (
-            <div>
-              <div>
+            <Container>
+              <div >
                 <Menu attached='top' tabular>
-                  <Menu.Item className="heading-secondary" name='Buyer Dashboard' value= 'Purchases' active={this.state.contentType === 'Purchases'} onClick={this.onChangeContentType} />
                   {Object.prototype.hasOwnProperty.call(this.props.currentUserObj, 'stripeAccountId') && 
                   <React.Fragment>
-                    <Menu.Item className="heading-secondary" name='Listings' value='Listings' active={this.state.contentType === 'Listings'} onClick={this.onChangeContentType} />
-                    <Menu.Item className="heading-secondary" name='Seller Dashboard' value='Dashboard' active={this.state.contentType === 'Dashboard'} onClick={this.onChangeContentType} />
+                    <Menu.Item className="heading-secondary" name='Campaigns' value='Listings' active={this.state.contentType === 'Listings'} onClick={this.onChangeContentType} />
+                    <Menu.Item className="heading-secondary" name='Dashboard' value='Dashboard' active={this.state.contentType === 'Dashboard'} onClick={this.onChangeContentType} />
                   </React.Fragment>
                   }
                   {/*
@@ -44,16 +43,14 @@ class MyProfile extends Component {
                   */}
                 </Menu>
               </div>
-            {this.state.contentType === 'Purchases' && (
-              <MyPurchases/>
-            )}
+
             {this.state.contentType === 'Listings' && (
               <MyListings/>
             )}
             {this.state.contentType === 'Dashboard' && (
               <MyDashboard/>
             )}
-          </div>
+          </Container>
         )
     }
 }

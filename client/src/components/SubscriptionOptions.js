@@ -10,8 +10,8 @@ import Checkout from './Checkout'
 import { connect } from 'react-redux';
 import { signIn, signOut, setRelayUrl } from "../actions";
 
-const stripePromise = loadStripe('pk_test_XvODp9OF6PFNt7Yka7dieFYp00MTqbXTDK')
-const stripe = window.Stripe('pk_test_XvODp9OF6PFNt7Yka7dieFYp00MTqbXTDK')
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY)
+const stripe = window.Stripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY)
 
 
 const customStyles = {

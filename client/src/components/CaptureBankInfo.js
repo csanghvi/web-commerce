@@ -117,13 +117,13 @@ class CaptureBankInfo extends Component {
     renderSubmitButton = ()=>{
       if (this.state.processing){
         return (
-          <Button loading type="submit" className="btn btn-primary btn-full" style={{background:'blueviolet', color:'white'}}>
+          <Button loading type="submit" style={{background:'#0038dd', color:'white', width:'100%', display:'inline-block', borderRadius: "8px !important"}}>
           Add bank account
         </Button>
         )
       } else {
         return (
-          <Button type="submit" className="btn btn-primary btn-full" style={{background:'blueviolet', color:'white'}}>
+          <Button type="submit" style={{background:'#0038dd', color:'white',width:'100%', display:'inline-block', borderRadius: "8px !important"}}>
           Add bank account
         </Button>
         )
@@ -139,10 +139,11 @@ class CaptureBankInfo extends Component {
                 <h2 class="heading-secondary">
                     Create Payout Account
                 </h2>
+                <p style={{marginTop:'10px'}}></p>
             </div>
             <form onSubmit={this.handleSubmit}>
             <input
-                className="name form__input"
+                className="formentry"
                 type="text"
                 id="accountHolderName"
                 name="accountHolderName"
@@ -152,6 +153,7 @@ class CaptureBankInfo extends Component {
                 required
               />
 
+
             <Dropdown
                 onChange={this.handleDDChange}
                 options={accountTypeOptions}
@@ -160,9 +162,9 @@ class CaptureBankInfo extends Component {
                 value={this.state.accountHolderType}
                 className="name form__input"
               />
-
+              <p style={{marginTop:'10px'}}></p>
               <input
-                className="new-section name form__input"
+                className="formentry"
                 type="text"
                 id="routingNumber"
                 name="routingNumber"
@@ -171,9 +173,9 @@ class CaptureBankInfo extends Component {
                 onChange={this.handleChange}
                 required
               />
-  
+              <p style={{marginTop:'10px'}}></p>
               <input
-                className="name form__input"
+                className="formentry"
                 type="text"
                 id="bankAccountNumber"
                 name="bankAccountNumber"
